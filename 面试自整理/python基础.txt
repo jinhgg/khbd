@@ -1,0 +1,522 @@
+1.*args, **kwargs是什么意思?
+*args：位置参数
+def foo(x,*args):
+    print(x)
+    print(args)
+
+foo(1,2,3,4)
+第一个参数赋x，其余放进一个元祖
+结果：
+1
+(2, 3, 4)
+反向使用：
+def foo(x,y,z):
+    print(x)
+    print(y)
+    print(z)
+foo(*(1,2,3))
+foo(*[1,2,3])
+这样虽然只传了一个参数，他会把元祖的值拆开赋予
+**kwargs：关键字参数
+def foo(x,**kwargs):
+    print(x)
+    print(kwargs)
+foo(1,y=1,a=2,b=3,c=4)#将1赋予x，y=1,a=2,b=3,c=4以字典的方式给了kwargs
+反向使用：
+def foo(a,b,c,d):
+    print(a)
+    print(b)
+    print(c)
+    print(d)
+foo(**{"a":2,"b":3,"c":4,"d":5})
+将字典里的每个值按照关键字传值的方式传给a,b,c,d
+
+
+2.谈一谈Python中的装饰器
+Python中的装饰器其实也是一种函数， 它可以在不修改原函数代码情况下扩展原函数功能。装饰器函数与普通函数不同之处就在于装饰器函数返回了一个函数对象
+	def route(self, rule, **options):
+		def decorator(f):
+		    self.add_url_rule(rule, f.__name__, **options)
+		    self.view_functions[f.__name__] = f
+		    return f
+
+		return decorator
+
+	@app.route('/')
+	def hello_world():
+	    return 'Hello World!'
+
+hello_world = decorator(hello_world)
+
+一个简单的装饰器
+def decorator(func):
+    def wrapper():
+        print('time is')
+        return func()
+    return wrapper
+
+@decorator
+def now():
+    print('2018')
+
+now()
+
+
+3.Python的垃圾回收机制以及内存管理
+垃圾回收机制：以引用计数为主， 标记清除、分代回收为辅。
+引用计数：Python在内部维护了针对每一个对象的引用计数， 当一个对象创建或者被引用时，其引用计数将加1，当一个对象被销毁或作用域失效时， 其引用计数将减1。只有对象的引用计数为0时，这个对象将会被回收。
+标记清除：对象循环引用(孤立的引用环)时将永远不会被销毁。对于对象循环引用的状况Python使用标记清除来解决，Python在内部实现了一个循环检测器， 不停的检测对象是否存在循环引用，如果两个对象互相循环引用并且不包含其他第三者对象时， 其将会被收回
+分代回收:这一策略的基本假设是，存活时间越久的对象，越不可能在后面的程序中变成垃圾,Python将所有的对象分为0，1，2三代。所有的新建对象都是0代对象。当某一代对象经历过垃圾回收，依然存活，那么它就被归入下一代对象。垃圾回收启动时，一定会扫描所有的0代对象。如果0代经过一定次数垃圾回收，那么就启动对0代和1代的扫描清理。当1代也经历了一定次数的垃圾回收后，那么会启动对0，1，2，即对所有对象进行扫描
+参考：https://zhuanlan.zhihu.com/p/39233024
+
+
+4.Python多线程
+https://www.zhihu.com/question/23474039/answer/269526476
+Python中多线程由于有GIL(全局解释器锁)的影响，GIL给每一个进程加了锁，每个进程只能有一个线程拿到锁去访问python解释器，即使开了10个线程也只是它们来回切换，并不同时运行，导致在任意时间内只有一个线程在运行，所以Python的多线程在处理计算密集型任务上效果反而不如单线程， 只有在处理IO密集型任务上多线程才能发挥实力，在等待IO过程中Python C源码会释放GIL， 最终会导致线程在等待IO过程中会被暂停去执行其他的线程。python中GIL主要是由于历史原因导致Cpython虚拟机中的GIL难以移除，同时GIL的存在保证了多线程之间数据完整性以及状态同步。
+为什么要有GIL：多线程之间数据完整性和状态同步
+解决方法：开多个子进程，这样每个进程都能有一个线程被分配到cpu上执行
+
+
+6.什么是lambda表达式？它有什么好处？
+lambda是一个匿名函数，不用命名，简化代码
+f=lambda x:x*2
+print(f(2))
+等同于
+print((lambda x:x*2)(2))
+等同于
+def f(x):
+    return x*2
+print(f(2))	
+
+
+7.Python里面如何拷贝一个对象(浅拷贝与深拷贝)？
+前提：
+id()返回的是当前对象在内存中的地址值，我们可以通过id()来判断两个变量是否是指向同一个对象。下面开始正文
+a = 1
+b = 1
+#id(a)=id(b)
+
+a = 'a'
+b = 'a'
+#id(a)=id(b)
+因为int和str都是不可变对象，相同的值在内存中只能存在一个
+
+a = [1,2,3]
+b = [1,2,3]
+#id(a)!=id(b)
+list是可变对象，尽管a和b值一样，但还是会在内存中开辟两个独立的空间，修改时互不影响
+但是
+a = [1,2,3]
+b = a
+#id(a)=id(b)
+这样就表示a和b指向同一对象了，修改一个会连带另一个
+
+浅拷贝：只拷贝最外层真实数据，内层拷贝内存地址
+	list1 = [1,2,3]
+	list2 = list1.copy()
+	print(id(list1),id(list2))#不同
+	对一个列表操作不影响另一个
+
+	如果有多层情况：
+	list1 = [1,2,3,[4,5]]
+	list2 = list1.copy()
+	print(id(list1),id(list2))#不同
+	print(id(list1[-1]),id(list2[-1]))#相同，这说明对于第二层的列表，只拷贝了引用，list1[1]和list2[1]指向同一个对象，修改list1[1]会影响list2[1]
+
+深拷贝：所有层都拷贝真实数据，不拷贝内存地址，修改不会影响
+	list1 = [1,2,3,[4,5]]
+	list2 = copy.deepcopy(list1)
+	print(id(list1),id(list2))#不同
+	print(id(list1[-1]),id(list2[-1]))#不同，这说明拷贝了数据并开辟了一个独立空间，和之前的不影响
+
+总结：
+	浅拷贝会拷贝父级对象的值，为它开辟一个独立的内存空间，与原拷贝对象数据互不干扰，如果含有子级对象，就拷贝它的内存地址，与原拷贝对象共享，修改时会受到影响，是一种不彻底的拷贝
+	深拷贝不管被拷贝的对象有多少级，都开辟独立的内存空间(除str,int等不可变对象，相同的str地址也是相同的)，互相独立，修改不影响，是彻底的拷贝
+
+
+8.__new__和__init__的区别
+在实例化一个类的时候，__new__在__init__前面执行 ，__new__方法为类对象在内存中分配空间，再将对象的引用传递给__init__方法的第一个参数self，完成初始化
+__new__两个行为：1为类对象在内存中分配空间2返回对象的引用
+
+
+9.python中协程？
+协程是一种比线程更加轻量级的存在，在一个线程上切换任务，协程不被操作系统内核管理，运行效率极高，协程的切换完全由程序控制，不像线程切换需要花费操作系统的开销,线程数量越多，协程的优势就越明显。协程不需要多线程的锁机制，因为只有一个线程，不存在变量冲突。对于多核CPU，利用多进程+协程的方式，能充分利用CPU，获得极高的性能
+
+
+10.Python的异常机制?
+一般套路：
+try:
+    #尝试执行的代码
+    pass
+except 错误类型1:
+    pass
+except (错误类型2,错误类型3):
+    pass
+except Exception as e:
+    print('未知错误类型',e)
+else:
+    #没有异常才会执行的代码
+    pass
+finally:
+    #无论有没有异常都会执行的代码
+    pass 
+
+自定义异常：
+def mye(level):
+    if level < 1:
+        ex = NameError('这里是自定义的异常信息') 
+        raise ex
+mye(0)
+
+assert触发异常：
+def foo(s):
+    n = int(s)
+    assert n != 0, 'n is zero!'
+    return 10 / n
+
+    foo('0')
+
+Traceback (most recent call last):
+  ...
+AssertionError: n is zero!
+
+
+
+11.python旧式类(经典类)和新式类的区别
+python2中，继承object的类是新式类，否则是旧式类，新式类继承了object提供的很多属性和方法比如：__new__,__repr__等，可以通过dir()方法查看
+pyhont3中没有旧式类，不继承object也是新式类
+主要区别是多继承中，新式类采用广度优先搜索，而旧式类是采用深度优先搜索
+都是从左至右的顺序查找， 经典类查找一个父类时同时向上查找，新式类则是先查找所有的父类然后再向上查找
+class A():
+    def __init__(self):
+        pass
+    def save(self):
+        print "This is from A"
+class B(A):
+    def __init__(self):
+        pass
+class C(A):
+    def __init__(self):
+        pass
+    def save(self):
+        print  "This is from C"
+class D(B,C):
+    def __init__(self):
+        pass
+d =  D()
+d.save()
+
+经典类的答案： This is from A
+新式类的答案： This is from C
+
+
+
+12.classmethod，staticmethod，property是什么？有什么作用？
+classmethod：使得被装饰的方法成为一个类方法既不需要实例化类就可以直接调用的方法，第一个参数为cls
+class Tool:
+    count = 0
+
+    def __init__(self,name):
+        Tool.count += 1
+
+    @classmethod
+    def show_tool_count(cls):
+        print(cls.count)
+
+t = Tool('lijinhang')
+Tool.show_tool_count()
+
+staticmethod： 使得被装饰的方法成为一个静态函数既与普通的函数无区别,只是想把方法写到类里面
+class Tool:
+    
+    @staticmethod
+    def run():
+        print('run!')
+
+Tool.run()
+
+property: 将一个方法变成一个属性来使用
+class Tool:
+
+    def __init__(self,name):
+        Tool.name = name
+
+    @property
+    def show_name(self):
+        return self.name
+
+t = Tool('lijinhang')
+print(t.show_name)
+
+总结：
+实例方法，什么装饰器都不加，第一个参数是self，可以访问对应实例的属性，通过实例.调用
+类方法，@classmethod修饰，第一个参数是cls，可以访问类属性，通过类名.调用
+静态方法，@staticmethod修饰，可以没有参数，和类外部的方法一样，通过类名.调用
+
+
+
+14.python上下文管理器是什么？
+
+Python中上下文管理器使用with来调用主要用于数据库连接，文件操作， 网络操作。
+其作用是： 如果在进行一些打开资源操作时出现了异常，上下文管理器将会自动的执行一些资源清理操作。在进入上下文管理器时， Python会先调用对象的__enter__方法， 该方法返回一个对象用于进行一些操作，如果在进行一些操作时发生了异常Python则调用__exit__该对象接受三个参数第一个参数异常类，第二个参数异常提示字符串， 第三个参数traceback对象，如：
+
+class Contextor:
+    def __enter__(self):
+        pass
+ 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+ 
+contextor = Contextor()
+ 
+with contextor [as var]:
+    with_body
+
+
+
+16.ORM是什么？
+ORM 全称是 Object/Relation Mapping
+
+
+
+17.请说一说迭代器和生成器区别?
+1)可迭代的(Iterable):内部实现了__iter__()方法，能被for循环遍历如list，dict
+如果要自己实现一个Iterable对象，只要他具有__iter__()方法就行(list,dict...等可迭代对象也都具有__iter__()方法)
+如：
+class Foo:                  
+    def __init__(self):
+        pass                               
+    def __iter__(self):     
+        pass  
+只要有__iter__()方法他就是可迭代的，但是执行for i in Foo():print(i)的结果是什么，就由__iter__()决定了
+可以通过以下代码检查：
+from collections import Iterable
+f = Foo()
+isinstance(f,Iterable)
+   
+2)迭代器(Iterator):可以被next()函数调用并不断返回下一个值的对象称为迭代器，迭代器内部要实现两个基本的方法：__iter__() 和 __next__()。
+如：
+class Foo:                  
+    def __init__(self,list):
+        self.list = list                             
+    def __iter__(self):     
+        pass 
+    def __next__(self):
+        pass
+有__iter__() 和 __next__()就是Iterator
+除了我们自己实现__next__()方法让他成为迭代器之外，还可以通过iter()方法实现
+把一个Iterable对象传入iter()，iter()调用该对象的__iter__()方法同时实现__next__()方法把他变成Iterator
+如：
+a = [1,2,3,4,5]
+a=iter(a) 
+如果把我们自定义的Iterable对象通过iter()变成Iterator，那就要注意__iter__()方法,该方法一定要返回一个Iterator
+如:
+class Foo:            
+    def __init__(self,li)
+        self.list = li
+                      
+    def __iter__(self)
+        for i in self.list:
+            yield i+1 
+f = Foo([1,2,3,4]) 
+或者
+class Foo:
+
+    def __iter__(self):
+        return iter([1,2,3,4])
+
+可迭代对象(内部有__iter__()方法的对象)通过iter()方法变成迭代器，iter()方法调用对象内部的__iter__()方法实现__next__()方法，__iter__()方法必须返回一个迭代器(Iterator)，next()方法实际就是调用对象的__next__()方法
+
+3)生成器(generator):有两种类型
+ 1.g = (x * x for x in range(1, 4))
+ 2.使用yield返回的函数 如：
+def odd():
+    print('step 1')
+    yield 1
+    print('step 2')
+    yield(3)
+    print('step 3')
+    yield(5)
+
+o = odd()
+
+next(o)
+next(o)
+next(o)
+
+generator和函数的执行流程不一样。函数是顺序执行，遇到return语句或者最后一行函数语句就返回。而变成generator的函数，在每次调用next()的时候执行，遇到yield语句返回，再次执行时从上次返回的yield语句处继续执行
+
+回答：
+生成器时一种特殊的迭代器， 生成器自动实现了迭代器协议(可以被next()调用)， 不需要手动的实现__iter__()以及__next__()方法
+迭代器必须实现__iter__()以及__next__()方法
+生成器在迭代的过程中可以改变当前的迭代值， 而普通的迭代器改变当前值时往往会发生错
+
+
+
+19.Python中列表与元组的异同？
+相同： 列表和元组都是容器并且是可迭代对象，二者可以包含任意类型的对象。
+不同：列表是可变的，可以添加修改元素， 元组是不可变，创建了就无法改变
+
+
+21.Python中列表的索引查询的时间复杂度是多少？
+
+O(1)
+
+
+25.Python中的作用域？
+一个对象的作用于总是由代码被赋值的地方所决定的,当遇见一个变量时Python会按照LEGB顺序搜索。
+LEGB 分别是:
+locals 是函数内的名字空间，包括局部变量和形参
+enclosing 外部嵌套函数的名字空间
+globals 全局变量
+builtins 内置模块的名字空间
+
+a = 1
+def A():
+    a=2
+    def B():
+        a=3
+        print(a)
+    print(a)
+    return B
+b = A()
+b()
+执行结果3
+注释a=3 执行结果2
+注释a=2 执行结果1
+
+
+
+26.Python的参数传递是值传递还是引用传递？
+
+可变对象使用引用传递， 不可变对象使用值传递
+
+
+27.写一个函数, 输入一个字符串, 返回倒序排列的结果
+def reverse(text):
+    return text[::-1]
+
+
+28.python中is和==的区别
+
+is比较的是对象在内存的地址， ==比较的对象中的值
+
+
+29.什么是Python的闭包？
+内层函数引用了其外部作用域的变量，然后返回内层函数的情况，称为闭包，创建一个闭包必须满足以下几点:
+必须有一个内嵌函数
+内嵌函数必须引用外部函数中的变量，外层空间中被引用的变量叫做层函数的环境变量
+外部函数的返回值必须是内嵌函数
+环境变量和内层非全局函数一起构成了闭包
+
+def line_conf(a, b):  
+    def line(x):  
+        return a*x + b  
+    return line  
+
+line1 = line_conf(1, 1)  
+line2 = line_conf(4, 5)  
+print(line1(5), line2(5)) 
+=======================================================================================================================================================================================================
+求从10到100中能被3或5整除的数的和
+l = []  
+for i in range(10, 100):  
+    if i % 3 == 0 or i % 5 == 0:  
+        l.append(i)  
+print(l, sum(l))
+
+
+python2与python3的区别：
+1.print函数
+2.除法运算
+python2：1/2结果：0
+python3：1/2结果：0.5 取整用//
+3.异常
+except Exception, e 改为 Exception exc as var
+4.不等运算符python2中不等于有两种写法!=和<>python3中去掉了<>,只有!= 一种写法
+5.数据类型python2有int与long类型python3只有int类型，没有long类型
+6.编码 
+Py3.X源码文件默认使用utf-8编码
+
+
+
+请用自己的算法, 按升序合并如下两个list, 并去除重复的元素
+list1 = [2, 3, 8, 4, 9, 5, 6]  
+list2 = [5, 6, 10, 17, 11, 2]  
+s = sorted(set(list1 + list2))  
+print(s)
+
+
+Python中单下划线和双下划线
+单下划线
+1.仅仅是命名规范上表示私有
+一个类中的 '_a' 属性依然可以通过 实例()._a调用
+2.带有单下划线的特性不会被 from module import * 导入
+在 1.py 中 from 2 import *，则2.py中的 'class _A()' 和 'def _A()'不会被导入
+'class A()'中的 '_a' 属性可以被导入和调用
+双下划线
+ 只能在类中调用
+'class A()' 中的 '__fun()' 不能通过 实例().__fun()调用，但可以通过 '实例._实例__fun()' 调用
+
+
+用__new__方法实现单例模式
+单例类无论创建多少次，只能有一个实例
+class Singleton():
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+
+        return cls._instance
+
+s1 = Singleton()
+s2 = Singleton()
+#s1,s2的内存地址是一样的，说明他们是同一个对象的两个引用
+用装饰器实现单例模式
+def Singleton(cls):
+    _instance = {}
+    def _singleton(*args, **kargs):
+        if cls not in _instance:
+            _instance[cls] = cls(*args, **kargs)
+        return _instance[cls]
+    return _singleton
+
+@Singleton
+class A():
+    def __init__(self, x=0):
+        self.x = x
+
+a1 = A(2)
+a2 = A(3)
+print(a1.x,a2.x)
+=============================================================================================
+1 Python的函数参数传递
+strings, tuples, 和numbers是不可更改的对象，而 list, dict, set 等则是可以修改的对象
+
+当一个引用传递给函数的时候,函数自动复制一份引用,这个函数里的引用和外边的引用没有半毛关系了.,函数内的引用指向的是可变对象,对它的操作就和定位了指针地址一样,在内存里进行修改.
+
+
+5 Python自省
+自省就是面向对象的语言所写的程序在运行时,所能知道对象的类型.简单一句就是运行时能够获得对象的类型.比如type(),dir(),getattr(),hasattr(),isinstance().
+
+a = [1,2,3]
+b = {'a':1,'b':2,'c':3}
+c = True
+print type(a),type(b),type(c) # <type 'list'> <type 'dict'> <type 'bool'>
+print isinstance(a,list)
+
+6 字典推导式
+d = {key: value for (key, value) in iterable}
+
+
+9 将列表生成式中[]改成() 之后数据结构是否改变？ 答案：是，从列表变为生成器
+>>> L = [x*x for x in range(10)]
+>>> L
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+>>> g = (x*x for x in range(10))
+>>> g
+<generator object <genexpr> at 0x0000028F8B774200>
+
+12 鸭子类型
+不关心对象是什么类型，只关心方法
+list.extend()方法中,我们并不关心它的参数是不是list,只要它是可迭代的,所以它的参数可以是list/tuple/dict/字符串/生成器等

@@ -1,0 +1,90 @@
+一、安装必备环境
+
+sudo apt-get install git golang-go vim sublime-text-installer
+
+如果出现安装错误，进行修复安装：
+
+sudo apt-get -f install
+
+安装完成后，查看安装版本：
+
+go version
+
+二、配置环境变量
+
+安装后go之后，要配置几个环境变量，如下：
+
+GOPATH：go的开发路径
+
+GOBIN：go工具程序存放路径
+
+GOROOT：go的安装路径，默认情况下，系统已经自动配置了GOROOT
+
+操作步骤：
+
+进入.bashrc配置环境变量：
+
+sodu vi ~/.bashrc
+
+在最后面添加如下代码：
+
+export GOPATH=/home/hedx/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:${GOPATH//://bin:}/bin
+
+保存，退出
+
+使环境变量生效：
+
+source ~/.bashrc
+
+查看环境变量是否生效:
+
+go env
+三、生成开发目录
+
+cd /home/hedx/go
+
+mkdir bin
+
+mkdir src
+
+mkdir pkg
+
+
+
+ok，完成，之后构建go项目放在src下面， 生成的安装包会自动放在bin下，生成过程中的中间文件会放在pkg下面。
+
+
+
+四、常用包获取
+
+go get github.com/astaxie/beego
+go get github.com/go-sql-driver/mysql
+go get github.com/eclipse/paho.mqtt.golang
+go get gopkg.in/mgo.v2
+go get github.com/beego/bee
+
+默认会下载到GOPATH的src目录下。
+
+六、go语言升级
+
+sudo add-apt-repository ppa:longsleep/golang-backports
+sudo apt-get update
+sudo apt-get install golang-go
+
+
+
+
+
+
+创建go项目
+创建项目目录: mkdir -p $GOPATH/src/github.com/jinhgg/gin_test_project   创建项目目录
+进入项目目录: cd $_                                                      
+初始化gomodule配置: go mod init
+拉取gin代码
+
+
+
+
+

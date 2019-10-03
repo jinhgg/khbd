@@ -1,0 +1,63 @@
+1.自定义一个可迭代对象，如何让他根据需求迭代出想要的结果？
+关键在于__iter__()方法
+我想让f打印3个1
+class Foo:
+
+    def __iter__(self):
+        yield 1
+	yield 1
+	yield 1
+
+f = Foo()
+for i in f:
+    print(i)
+
+注意，__iter__()必须返回一个迭代器(iterator),这里yield返回的是一个生成器，生成器属于迭代器
+这样也行：因为他返回的也是一个迭代器
+class Foo:
+    def __init__(self,list):
+        self.list = list
+
+    def __iter__(self):
+        return iter(self.list)
+
+f = Foo([1,2,3,4])
+for i in f:
+    print(i)
+但是这样就不行：yield一个迭代器返回的是个？(反正不是一个迭代器)执行结果是<list_iterator object at 0x7fbca7fa4f28>，没有迭代出想要的结果
+class Foo:
+    def __init__(self,list):
+        self.list = list
+
+    def __iter__(self):
+        yield iter(self.list)
+
+f = Foo([1,2,3,4])
+for i in f:
+    print(i)
+
+2.正则表达式
+m = re.match(r'/hello/(.*)/(.*)/$', '/hello/sdsdppop/dsds/')
+print(m)
+print(m.group(1))#参数1代表第一个括号，0代表整体/hello/sdsdppop/dsds/
+print(m.groups(0))#参数没用，只会返回所有括号的元祖形式
+执行结果：
+<_sre.SRE_Match object; span=(0, 21), match='/hello/sdsdppop/dsds/'>
+sdsdppop
+('sdsdppop', 'dsds')
+
+
+继承父类__init__()方法
+class A():
+	def __init__(self,name,age):
+		self.name = name
+		self.age = age
+class B(A):
+	def __init__(self,name,age):
+		super().__init__(name,age)
+
+
+
+如果需要bytes类型，就str.encode('utf-8')
+如果要把bytes变成中文，就bytes.decode('utf-8')
+

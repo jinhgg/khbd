@@ -1,0 +1,30 @@
+要在虚拟环境下安装gunicorn，把虚拟环境外的gunicorn删了
+gunicorn --bind 0.0.0.0:5000 wsgi:app -w 4 
+w:进程数
+wsgi:在项目下创建wsgi.py(内容可以和manage.py一样，用gunicorn manage.py 就不需要了，wsgi.py相当于manage.py):
+from app import app                                                                                      
+ 
+if __name__ == "__main__":
+     app.run()
+
+
+
+# config.py
+import os
+import multiprocessing
+
+# debug = True
+loglevel = 'debug'
+bind = "0.0.0.0:10020"
+pidfile = None
+accesslog = "/home/turingsense/ljh/AdminLog/access.log"
+errorlog = "/home/turingsense/ljh/AdminLog/error.log"
+daemon=True                                                                                                                                                                                                       
+# 启动的进程数
+# workers = multiprocessing.cpu_count()
+workers = 2
+worker_class = 'gevent'
+# x_forwarded_for_header = 'X-FORWARDED-FOR'
+
+执行
+gunicorn -c gunicorn.py run:app

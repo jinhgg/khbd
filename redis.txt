@@ -1,0 +1,223 @@
+安装redis
+wget http://download.redis.io/releases/redis-5.0.3.tar.gz
+tar -xf redis.tar.gz
+cd redis.tar.gz
+make
+make install
+
+前台启动redis服务
+redis-server
+后台启动
+把redis.conf 设置 daemon yes
+redis-server ./redis/redis.conf
+
+启动redis终端 类似于mysql -uljh -p
+redis-cil
+修改redis配置文件后重启
+redis-cil 
+shutdown save
+exit
+
+
+===================================================================================================
+redis.conf
+复制一份到制定目录下修改，启动redis的时候再制定配置文件的目录
+daemonize yes
+port 6382
+dir "/opt/soft/redis/data" #以下两行制定了日志文件位置
+logfile "6382.log"
+
+===================================================================================================
+1.主从配置
+方式一：
+复制redis.conf为redis-6379.conf(主节点) 并修改
+daemonize yes
+pidfile /var/run/redis-6379.pid
+logfile "6379.log"
+#save 900 1
+#save 300 10
+#save 60 10000 
+dbfilename dump-6379.rdb
+dir /opt/soft/redis/data #这是日志文件的目录
+
+复制并创建redis-6380.conf(从节点)
+port 6380
+logfile "6380.log"
+dbfilename dump-6380.rdb
+slaveof 127.0.0.1 6379 #如果不配置这项，默认是主节点
+
+启动主节点
+redis-server redis-6379.conf
+查看此节点的状态(主从信息)
+redis-cli
+info replication
+显示：
+role:master
+connected_slaves:0
+master_replid:f357ea54aa66fd78868c0eb97cd18b020d089cb3
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:0
+second_repl_offset:-1
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+启动从节点
+redis-server redis-6380.conf
+查看从节点
+redis-cli -p 6380 info replication
+显示
+# Replication
+role:slave
+master_host:127.0.0.1
+master_port:6379
+master_link_status:up
+master_last_io_seconds_ago:8
+master_sync_in_progress:0
+slave_repl_offset:168
+slave_priority:100
+slave_read_only:1
+connected_slaves:0
+master_replid:092b2a7f48b6ff554dd92f5793283f61784dcd2b
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:168
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:168
+
+测试
+redis-cli
+set hello world
+redis-cli -p 6380
+get hello
+world
+
+把6380变为主节点
+redis-cli -p 6380
+slaveof no one
+执行info Replication查看主从信息
+
+
+
+注意:一个redis设置为从节点后他的所有数据都被清空，复制主节点的数据
+info查看全部信息 info Replication只查看Replication信息
+
+===============================================================================================
+哨兵
+
+主从节点配置:
+主 vim redis-7000.conf
+port 7000
+daemonize yes
+pidfile /var/run/redis-7000.pid
+logfile "7000.log"
+dir ./
+从
+sed "s/7000/7001/g" redis-7000.conf > redis-7001.conf 
+sed "s/7000/7002/g" redis-7000.conf > redis-7002.conf
+
+echo slaveof 127.0.0.1 7000 >> redis-7001.conf 
+echo slaveof 127.0.0.1 7000 >> redis-7002.conf
+分别启动他们  
+
+配置哨兵(redis-sentinel-26379复制三个分别改端口) 
+port 26379
+daemonize yes
+logfile "26379.log"
+dir /tmp
+sentinel monitor mymaster 127.0.0.1 7000 2 #这个2代表有2个sentinel认为master死了才能真正认为该master不可用
+sentinel down-after-milliseconds mymaster 30000
+sentinel parallel-syncs mymaster 1
+sentinel failover-timeout mymaster 180000
+
+启动哨兵
+redis-sentinel redis-sentinel-26379.conf 
+redis-sentinel redis-sentinel-26380.conf
+redis-sentinel redis-sentinel-26381.conf
+登陆一个哨兵随便
+redis-cli -p 26379
+info # 查看信息
+
+停止一个主redis，会有一个从redis成为主
+redis-cli -p 7000
+shutdown save
+exit
+redis-cli -p 7001
+info # 他变成了主
+重启7000，他变成从
+
+Sentinel其实就是Client和Redis之间的桥梁，所有的客户端都通过Sentinel程序获取Redis的Master服务
+================================================================================================
+cluster 搭建
+
+vim redis-7000.conf
+port 7000
+daemonize yes
+dir ./
+logfile "7000.log"
+dbfilename "dump-7000.rdb"
+cluster-enabled yes
+cluster-config-file nodes-7000.conf
+cluster-require-full-coverage no # 是否一个节点断了别的就不能继续使用
+
+sed "s/7000/7001/g" redis-7000.conf > redis-7001.conf 
+sed "s/7000/7002/g" redis-7000.conf > redis-7002.conf 
+sed "s/7000/7003/g" redis-7000.conf > redis-7003.conf 
+sed "s/7000/7004/g" redis-7000.conf > redis-7004.conf 
+sed "s/7000/7005/g" redis-7000.conf > redis-7005.conf
+启动这6个节点
+redis-server redis-7000.conf 
+redis-server redis-7001.conf 
+redis-server redis-7002.conf 
+redis-server redis-7003.conf 
+redis-server redis-7004.conf 
+redis-server redis-7005.conf
+把这6个节点连通
+redis-cli -p 7000 cluster meet 127.0.0.1 7001
+redis-cli -p 7000 cluster meet 127.0.0.1 7002
+redis-cli -p 7000 cluster meet 127.0.0.1 7003
+redis-cli -p 7000 cluster meet 127.0.0.1 7004
+redis-cli -p 7000 cluster meet 127.0.0.1 7005
+随便登陆一个节点查看连接情况
+redis-cli -p 7000 cluster nodes
+或者
+redis-cli -p 7000 cluster info
+
+配置主从节点
+7000-7003
+7001-7004
+7002-7005
+
+命令： redis-cli -p 7003 cluster replicate [主的myid]
+
+redis-cli -p 7003 cluster replicate 24ff5a4768a7a36b1a32d9756de882614f56634a
+redis-cli -p 7004 cluster replicate 8372f76ea8db33163553b6c63aba954471476f52
+redis-cli -p 7005 cluster replicate 38198e82fccde203b6d1765658dbf9ee58686f50
+===================================================================================================
+给主节点分配槽
+写一个脚本文件：
+#!/bin/bash
+start=$1
+end=$2
+port=$3
+for slot in `seq ${start} ${end}`
+do
+	echo "slot:${slot}"
+	redis-cli -p ${port} cluster addslots ${slot}
+done
+
+执行命令：
+sh addslots.sh 0 5461 7000
+sh addslots.sh 5462 10922 7001
+sh addslots.sh 10923 16383 7002
+===================================================================================================
+生产环境部署
+3台机器(错开)
+机器1:   主10.0.0.1:7000从10.0.0.2:7003
+机器2:   主10.0.0.2:7001从10.0.0.3:7004
+机器3:   主10.0.0.3:7002从10.0.0.1:7005
+6台机器
+三主三从
+ 

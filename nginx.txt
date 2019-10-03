@@ -1,0 +1,478 @@
+server {
+    listen 80;
+    server_name localhost;
+    charset utf-8;
+    client_max_body_size 75M;
+    location / {
+		proxy_pass http://0.0.0.0:5000;
+		proxy_redirect     off;
+		proxy_set_header   Host                 $http_host;
+		proxy_set_header   X-Real-IP            $remote_addr;
+		proxy_set_header   X-Forwarded-For      $proxy_add_x_forwarded_for;
+		proxy_set_header   X-Forwarded-Proto    $scheme;
+	}
+	location ^~ /static/ {
+		root /root/wxorder/app;
+	}
+}
+==================================================================================================
+安装nginx：
+在http://nginx.org/packages/找到相关的版本
+yum install http://nginx.org/packages/centos/7/x86_64/RPMS/nginx-1.12.0-1.el7.ngx.x86_64.rpm
+
+查看编译参数：
+nginx -V
+查看安装位置
+rmp -ql nginx
+主配置文件
+/etc/nginx/nginx.conf
+查看nginx监听了哪些端口
+netstat -lntup|grep nginx  (-lntup参数的含义可以自己查看)  yum install net-tools
+访问ip看到nginx网页，如果打不开，执行iptables -F
+
+可以通过curl -I http//xxx.com 查看response header
+curl -e "http://www.baidu.com" -I http://www.xxx
+-e 添加referer信息
+正向代理 翻墙         为客户端服务
+反向代理 负载均衡     为服务器服务
+==================================================================================================
+启动nginx
+nginx
+停止nginx
+nginx -s stop
+不停止并重载nginx
+nginx -s reload
+测试配置文件
+nginx -t  (-T并打印配置)
+查看进程
+ps -ef|grep nginx
+指定配置文件(一般在修改defalt后reload使用)
+nginx -c /etc/nginx/nginx.conf 
+
+验证配置是否正确: nginx -t
+查看Nginx的版本号：nginx -V
+启动Nginx：start nginx
+快速停止或关闭Nginx：nginx -s stop
+正常停止或关闭Nginx：nginx -s quit
+配置文件修改重装载命令：nginx -s reload
+1、错误情况：
+nginx: [error] CreateFile() "E:\nginx\nginx-1.9.3/logs/nginx.pid" failed
+nginx: [error] Open() "E:\nginx\nginx-1.9.3/logs/nginx.pid" failed
+使用命令创建/logs/nginx.pid文件: nginx -c conf/nginx.conf
+========================================================================================================
+配置详解：
+user nginx;
+worker_processes auto;  
+# 工作进程，nginx有一个master进程管理多个worker进程
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+include /usr/share/nginx/modules/*.conf;
+events {
+    worker_connections 1024;
+    #一个worker进程最大连接数
+}
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log  /var/log/nginx/access.log  main;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    #超时时间
+    types_hash_max_size 2048;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+    include /etc/nginx/conf.d/*.conf;
+    server {
+    #一个server对应一个网站
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+        include /etc/nginx/default.d/*.conf;
+        location /mystatus {
+                stub_status;
+        }
+        location / {
+        }
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+}
+=================================================================================================
+sendfile on #使用sendfile
+零拷贝，静态文件不经过用户态，只在内核态
+context : http,server,location
+=================================================================================================
+不同域名对应一台服务器上的不同站点：
+配置多个server
+server {
+ 24     listen       80;可以都监听80端口，如果监听81，访问时就要加81
+ 25     server_name  www.jinhgg.com;配置不同的域名
+	# autoindex on; 如果没有配置首页，他将自动现实/usr/share/nginx/html里的文件目录
+ 30     location / {
+ 31         root   /usr/share/nginx/html;配置不同的页面位置
+ 32         index  jinhgg.html index.htm;配置不同的页面
+ 33     }
+ 35     error_page  404              /404.html;
+ 39     error_page   500 502 503 504  /50x.html;
+ 40     location = /50x.html {
+ 41         root   /usr/share/nginx/html;
+ 42     }
+       }
+如果直接用ip访问 nginx就不知道哪个server(默认访问第一个server)，因为多个server都监听80端口
+===============================================================================================
+--with-http_stub_status_module
+在server里加上
+        location /mystatus {
+                stub_status;
+        }
+可以查看连接状态
+==============================================================================================
+Syntax:	error_log file [level];
+Default:	
+error_log logs/error.log error;
+Context:main, http, mail, stream, server, location
+================================================================================================
+ngx_http_log_module(access_log)
+
+Syntax:	access_log path [format [buffer=size] [gzip[=level]] [flush=time] [if=condition]];
+access_log off;
+Default:	
+access_log logs/access.log combined;
+Context:	http, server, location, if in location, limit_except
+
+================================================================================================
+ab(apache benchmark)安装  (https://blog.csdn.net/u011415782/article/details/78501799)
+yum -y install httpd-tools
+ab -c 100 -n 10000 待测试网站（建议完整路径）-c 并发数量 -n 总数量
+
+Server Software:        nginx/1.10.2 (服务器软件名称及版本信息)
+Server Hostname:        192.168.1.106(服务器主机名)
+Server Port:            80 (服务器端口)
+Document Path:          /index1.html. (供测试的URL路径)
+Document Length:        3721 bytes (供测试的URL返回的文档大小)
+Concurrency Level:      1000 (并发数)
+Time taken for tests:   2.327 seconds (压力测试消耗的总时间)
+Complete requests:      5000 (的总次数)
+Failed requests:        688 (失败的请求数)
+Write errors:           0 (网络连接写入错误数)
+Total transferred:      17402975 bytes (传输的总数据量)
+HTML transferred:       16275725 bytes (HTML文档的总数据量)
+Requests per second:    2148.98 [#/sec] (mean) (平均每秒的请求数) 这个是非常重要的参数数值，服务器的吞吐量 
+Time per request:       465.338 [ms] (mean) (所有并发用户(这里是1000)都请求一次的平均时间)
+Time  request:       0.247 [ms] (mean, across all concurrent requests) (单个用户请求一次的平均时间)
+Transfer rate:          7304.41 [Kbytes/sec] received 每秒获取的数据长度 (传输速率，单位：KB/s)
+...
+Percentage of the requests served within a certain time (ms)
+  50%    347  ## 50%的请求在347ms内返回 
+  66%    401  ## 60%的请求在401ms内返回 
+  75%    431
+  80%    516
+  90%    600
+  95%    846
+  98%   1571
+  99%   1593
+ 100%   1619 (longest request)
+--------------------- 
+======================================================================================================
+请求限制
+     limit_req_zone $binary_remote_addr zone=one:10m rate=1r/s;
+  2 server {
+  3     listen       80;
+  4     server_name  localhost;
+  5 
+  6     #charset koi8-r;
+  7     #access_log  /var/log/nginx/log/host.access.log  main;
+  8 
+  9     location / {
+ 10         limit_req zone=one burst=3 nodelay; #burst超过的3个请求 会延迟到下一秒 nodelay剩下的直接返回503
+
+=====================================================================================================
+连接限制（限制只能同时一个链接，但可以处理多个请求）
+http {
+    limit_conn_zone $binary_remote_addr zone=addr:10m;
+
+    ...
+
+    server {
+
+        ...
+
+        location /download/ {
+            limit_conn addr 1;
+        } 
+====================================================================================================
+http_access_module 对于ip的限制
+location / {
+    deny  192.168.1.1;
+    allow 192.168.1.24;
+
+}
+====================================================================================================
+http_access_module(访问限ip) 有局限性，因为封的不一定是客户端ip可能是代理ip
+deny 123.23.232.11;
+allow all;
+===================================================================================================
+http_auth_basic_module 登陆认证 （这个局限性也很大，不是生产方案）
+需要用到httpd-tools这个工具
+htpasswd -c ./auth_conf lijinhang # 创建保存用户名和密码的文件
+htpasswd -D user_passwd admin # 删除一个用户
+
+location / {
+    auth_basic           "closed site";
+    auth_basic_user_file conf/htpasswd;
+}
+
+======================================================================================================
+nginx访问图片
+location ~ .*\.(jpg|gif|png)$ {   #这么写代表以图片结尾的url
+        root   /opt/app/code/images; #在这里寻找图片文件
+        gzip on; #压缩开启
+        gzip_http_version 1.1; # http版本
+        gzip_comp_level 2; # 压缩等级
+        gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;  # 压缩类型
+
+图片一般压缩不了，大小不变 在终端tar 图片大小也不会变多少
+====================================================================================================
+nginx压缩文本 效果可官   nginx一开始访问文件403forbidden，需要把nginx.conf里user改成 root，
+location ~ .*\.(txt|xml)$ {
+        root   /opt/app/code/doc;
+        gzip on;
+        gzip_http_version 1.1;
+        gzip_comp_level 1;
+        gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
+    }
+
+======================================================================================================
+浏览器缓存机制：
+检验cache-control(时间格式)是否过期，如果过期检验etag(一串代码)，在检验last-modified
+
+    location ~ .*\.(htm|html)$ {
+        expires 24h; #这个会在response data里面加上 Cache-Control:max-age=86400
+        root /root/html;
+
+    }
+
+html文件中文乱马，在default.conf里面设置charset:utf-8;
+======================================================================================================
+设置跨域访问(防范csrf攻击)
+    location ~ .*\.(htm|html)$ {
+	add_header Access-Control-Allow-Origin http://www.baidu.com;
+	add_header Access-Control-Allow-Origin-Methods GET,PUT,DELETE,POST;
+        root /root/html;
+
+    }
+=====================================================================================================
+对refer信息的筛选，设置防盗链  _http_referer_module
+location ~ .*\.(txt|xml)$ {
+    valid_referers none blocked 211.22.32.199 
+#none没有referer信息可以访问，blocked不是标准http://开头的可以访问，referer是211.22.32.199的可以访问
+    if ($invalid_referer) {
+	return 403;
+    }
+}
+
+=====================================================================================================
+反向代理 访问80端口重定向到8080端口 这时可以netstat -lntup|grep nginx 占用80和8080两个端口
+server {
+    listen       80;
+    server_name  localhost;
+    location ~ /test.html$ { # 重点是/test.html在重定向后的url中能打开，http://127.0.0.1:8080/test.html必须能打开，proxy_pass 代理另一个服务器ip也同理
+        proxy_pass http://127.0.0.1:8080;
+    }
+
+}
+server {
+    listen       8080;
+    server_name  localhost;
+    location / {
+        root   /root/html;
+        index  index.html index.htm;
+    }
+}
+======================================================================================================
+一般反向代理服务器的配置：
+location / {
+        proxy_pass   http://hello;    #在这里设置一个代理
+        proxy_redirect             default; 
+
+        #后端的Web服务器可以通过X-Forwarded-For获取用户真实IP
+        proxy_set_header           Host $http_host; 
+        proxy_set_header           X-Real-IP $remote_addr; 
+
+        proxy_connect_timeout      30; #nginx跟后端服务器连接超时时间(代理连接超时)
+        proxy_send_timeout         60; #后端服务器数据回传时间(代理发送超时)
+        proxy_read_timeout         60; #连接成功后，后端服务器响应时间(代理接收超时)
+
+	proxy_buffering on;
+	proxy_buffer_size 4k; #设置代理服务器（nginx）保存用户头信息的缓冲区大小
+	proxy_buffers 4 32k; #proxy_buffers缓冲区，网页平均在32k以下的设置
+	proxy_busy_buffers_size 64k; #高负荷下缓冲大小（proxy_buffers*2）
+	proxy_temp_file_write_size 64k;#设定缓存文件夹大小，大于这个值，将从upstream服务器传
+}
+来源：https://www.cnblogs.com/me115/p/5698787.html
+===================================================================================================
+nginx负载均衡
+主：
+upstream imooc { # imooc自定义 和下面proxy_pass一至
+    #ip_hash 使用ip_hash的调度方式根据(remote_addr)，不加默认轮询问，为什么用hash因为登陆后换服务器cookie失效
+    server 45.32.215.189:8001;
+    server 45.32.215.189:8002;
+    server 45.32.215.189:8003; #可以在后面加weight=5(权重)，backup备分
+}
+#down 表示单前的server临时不參与负载.
+#weight 默觉得1.weight越大，负载的权重就越大。
+#max_fails ：同意请求失败的次数默觉得1.当超过最大次数时，返回proxy_next_upstream 模块定义的错误.
+#fail_timeout : max_fails次失败后。暂停的时间。
+#backup： 其他全部的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        proxy_pass http://imooc;
+        include proxy_params;
+    }
+
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+}
+副：
+server {
+    listen       8001;
+    server_name  localhost;
+
+    charset utf-8;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        root   /root/code1;
+        index  index.html index.htm;
+    }
+}
+server {
+    listen       8002;
+    server_name  localhost;
+
+    charset utf-8;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        root   /root/code2;
+        index  index.html index.htm;
+    }
+}
+server {
+    listen       8003;
+    server_name  localhost;
+
+    charset utf-8;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        root   /root/code3;
+        index  index.html index.htm;
+    }
+}
+
+访问主nginx 会轮询upstream里的站点
+================================================================================================
+针对不同的值取哈西作负载均衡
+upstream imooc { # imooc自定义 和下面proxy_pass一至
+    hash $request_uri; # 根据url取哈西，相同的url总是访问到同一台服务器
+    server 45.32.215.189:8001;
+    server 45.32.215.189:8002;
+    server 45.32.215.189:8003;
+}
+================================================================================================
+缓存的三种方式 客户端缓存 代理缓存 服务端缓存(redis)
+ngx_http_proxy_module
+
+upstream imooc {
+    server 45.32.215.189:8001;
+    server 45.32.215.189:8002;
+    server 45.32.215.189:8003;
+}
+proxy_cache_path /opt/app/cache levels=1:2 keys_zone=imooc_cache:10m max_size=10g inactive=60m use_temp_path=off;
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        proxy_cache imooc_cache;
+        proxy_cache_valid 200 304 12h; # 200 304状态的期限为12h
+        proxy_cache_valid any 10m; # 其他为10m
+        proxy_cache_key $host$uri$is_args$args; # 在缓存中记录的key值
+        add_header Nginx-Cache "$upstream_cache_status"; # response header中添加一项Nginx-Cache
+
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+	# 如果一台服务器出现 timeout 500 502 503...就跳过，连接另一台服务器 
+        proxy_pass http://imooc;
+        include proxy_params;
+    }
+
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+}
+# proxy_cache_path 缓存目录
+# levels=1:2 缓存目录等级  
+# keys_zone 缓存空间名称及大小  
+# max_size 缓存文件最大多大
+# inactive 缓存文件在多少时间内没有被访问就删除
+# use_temp_path 存放临时文件，一般off
+
+====================================================================================================
+对一些页面不缓存
+upstream imooc {
+    server 45.32.215.189:8001;
+    server 45.32.215.189:8002;
+    server 45.32.215.189:8003;
+}
+proxy_cache_path /opt/app/cache levels=1:2 keys_zone=imooc_cache:10m max_size=10g inactive=60m use_temp_path=off;
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    if ($request_uri ~ ^/(url3|login|register|password)) {#这一行
+        set $cookie_nocache 1;
+    }
+
+    location / {
+        proxy_cache imooc_cache;
+        proxy_cache_valid 200 304 12h;
+        proxy_cache_valid any 10m;
+        proxy_cache_key $host$uri$is_args$args;
+        proxy_no_cache $cookie_nocache $arg_nocache $arg_comment;#和下一行
+        proxy_no_cache $http_pragma $http_authorization;
+        add_header Nginx-Cache "$upstream_cache_status";
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+
+        proxy_pass http://imooc;
+        include proxy_params;
+    }
+}
+

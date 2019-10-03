@@ -1,0 +1,6 @@
+git config --global user.email "970402782@qq.com"
+git config --global user.name "jinhgg"
+
+
+git config --global --unset http.proxy
+git config --global --unset https.proxy

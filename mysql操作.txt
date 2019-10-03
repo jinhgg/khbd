@@ -1,0 +1,19 @@
+
+sudo apt-get install mysql-server
+sudo apt-get install mysql-client 
+sudo apt-get install libmysqlclient-dev
+
+
+创建超级用户
+GRANT ALL ON *.* TO 'ljh'@'%' IDENTIFIED BY '123' WITH GRANT OPTION;
+创建数据库
+CREATE DATABASE `BaoBao_v2` DEFAULT CHARACTER SET = `utf8mb4`;
+数据库导出
+mysqldump -u username -p dbname > /home/ljh/BackupName.sql
+数据库还原
+mysql -u root -p < /home/ljh/BackupName.sql
+
+修改my.cnf后重启
+service mysql restart
+service mysql start
+service mysql stop

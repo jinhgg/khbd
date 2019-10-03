@@ -1,0 +1,143 @@
+1.进程的有哪几种状态以及导致转换的事件。
+新建态(new)：刚刚创建的进程，操作系统还没有把它加入到可执行进程组中，通常是进程控制块已经创建但是还没有加载到内存中的进程。
+就绪态(ready)：进程已经做好了准备，只要有机会就开始执行。
+运行态(running)：该进程正在执行。
+阻塞态（blocked）：进程在某些事情发生前不能执行，等待阻塞进程的事件完成。
+退出态(结束态exit)：操作系统从可执行进程组中释放出的进程，由于自身或某种原因停止运行。
+导致转换的事件：
+1. 空->新建：创建执行一个程序的新进程
+2. 新建->就绪：创建并初始化完成，准备运行
+3. 就绪->运行：操作系统根据某种调度算法选择一个处于就绪态的进程运行时。
+4. 运行->退出：正常完成、出错，父进程终止
+5. 运行->就绪：分配给的时间片用完，该把处理器的资源释放给其他在就绪态的进程使用了；还有一中原因可能是由于具有更改优先级的就绪态进程抢占了该进程的资源，使其被中断转换到就绪态。
+6.运行->阻塞：如果进程请求它必须等待的某些事件，例如一个无法立即得到的资源（如I/O操作），只有在获得等待的资源后才能继续进程的执行，则进入等待态（阻塞态）。
+7.阻塞->就绪：当等待的事件发生时，处于阻塞态的进程转换到就绪态。
+8.就绪->退出：在上图中没有标出这种转换，在某些进程中，父进程可以在任何时刻终止一个子进程，如果一个父进程终止，所有相关的子进程都被终止。
+9.阻塞->退出：跟上一项原因类似。
+
+
+2.进程与线程的区别
+一、关于进程和线程，首先从定义上理解就有所不同
+进程是什么？
+是具有一定独立功能的程序关于某个数据集合上的一次运行活动，它是系统进行资源分配和调度的一个独立单位
+重点在系统调度和单独的单位，也就是说进程是可以独立运行的一段程序。    
+线程又是什么？       
+线程是进程的一个实体，是CPU调度和分派的基本单位，他是比进程更小的能独立运行的基本单位，线程自己基本上不拥有系统资源。    
+二、他们之间的关系    
+1、一个线程只能属于一个进程，而一个进程可以有多个线程，但至少有一个线程（通常说的主线程）。    
+2、资源分配给进程，同一进程的所有线程共享该进程的所有资源。    
+3、线程在执行过程中，需要协作同步。不同进程的线程间要利用消息通信的办法实现同步。    
+4、处理机分给线程，即真正在处理机上运行的是线程。    
+5、线程是指进程内的一个执行单元，也是进程内的可调度实体。  
+三、从三个角度来剖析二者之间的区别    
+1、调度：线程作为调度和分配的基本单位，进程作为拥有资源的基本单位。    
+2、并发性：不仅进程之间可以并发执行，同一个进程的多个线程之间也可以并发执行。    
+3、拥有资源：进程是拥有资源的一个独立单位，线程不拥有系统资源，但可以访问隶属于进程的资源。
+
+
+3.进程通信的几种方式。
+进程之间进行通信常用的有几种方式：管道，消息队列，共享内存，信号量，套接字
+python中的具体实现
+
+管道：
+from multiprocessing import Process, Pipe
+
+def A(pipe):
+   pipe.send("hello")
+
+def B(pipe):
+   print(pipe.recv())
+
+if __name__ == "__main__":
+   recevie_pipe, send_pipe = Pipe()
+   #pipe只能适用于两个进程
+   my_producer= Process(target=producer, args=(send_pipe, ))
+   my_consumer = Process(target=consumer, args=(recevie_pipe,))
+
+   my_producer.start()
+   my_consumer.start()
+   my_producer.join()
+   my_consumer.join()
+
+消息队列：
+from multiprocessing import Process, Queue
+
+def producer(queue):
+ queue.put("a")
+
+def consumer(queue):
+ data = queue.get()
+ print(data)
+
+if __name__ == "__main__":
+ queue = Queue(10)
+ my_producer = Process(target=producer, args=(queue,))
+ my_consumer = Process(target=consumer, args=(queue,))
+ my_producer.start()
+ my_consumer.start()
+ my_producer.join()
+ my_consumer.join()
+
+共享内存：
+from multiprocessing import Process, Manager
+
+def add_data(p_dict, key, value):
+  p_dict[key] = value
+
+if __name__ == "__main__":
+  progress_dict = Manager().dict()
+  from queue import PriorityQueue
+
+  first_progress = Process(target=add_data, args=(progress_dict, "a", 1))
+  second_progress = Process(target=add_data, args=(progress_dict, "b", 2))
+
+  first_progress.start()
+  second_progress.start()
+  first_progress.join()
+  second_progress.join()
+
+  print(progress_dict)
+
+
+4.线程同步几种方式
+1).锁机制
+from threading import Lock
+
+total = 0
+lock = Lock()
+def add():
+    global lock
+    global total
+    for i in range(10000):
+        lock.acquire()
+        total += 1
+        lock.release()
+
+def desc():
+    global total
+    global lock
+    for i in range(10000):
+        lock.acquire()
+        total -= 1
+        lock.release()
+
+import threading
+thread1 = threading.Thread(target=add)
+thread2 = threading.Thread(target=desc)
+thread1.start()
+thread2.start()
+
+thread1.join()
+thread2.join()
+print(total)
+
+
+6.进程池、线程池的原理？
+线程池： 开启一定数量的线程并让其睡眠， 当需要一个线程去执行某种任务时， 唤醒某个线程让它执行任务， 任务执行完毕又让其睡眠。
+进程池同理
+
+
+
+
+
+

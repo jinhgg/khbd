@@ -1,0 +1,23 @@
+|  # 将前面的输出作为后者的输入
+
+grep 1 2  # 查找在2中查找1
+
+ps -ef|grep nginx  #查看某个进程
+
+grep -v "#" ceshi.txt # 在ceshi.txt中查找不包括#的行 ，去注释用
+grep -v "^$" ceshi.txt # 查找不包括空行的内容
+cat ceshi.txt|grep -v "#"|grep -v "^$" > ceshi2.txt  将ceshi.txt去注释去空行写入ceshi2.txt
+返回上一次目录
+cd -
+
+解压.tar.gz文件
+tar -xf xxx.tar.gz
+
+文件替换
+sed 's/要被取代的字串/新的字串/g'
+sed "s/7000/7001/g" redis-7000.conf > redis-7001.conf 
+#将redis-7000.conf里的7000替换成7001生成redis-7001.conf，redis-7000.conf不变
+
+文件写入
+echo haha >> a.txt #添加
+echo haha > a.txt  #删除原有内容写入
