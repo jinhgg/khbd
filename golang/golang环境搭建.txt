@@ -28,7 +28,7 @@ sodu vi ~/.bashrc
 
 在最后面添加如下代码：
 
-export GOPATH=/home/hedx/go
+export GOPATH=~/go
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:${GOPATH//://bin:}/bin
 
@@ -58,7 +58,7 @@ ok，完成，之后构建go项目放在src下面， 生成的安装包会自动
 
 
 四、常用包获取
-
+在任意目录下执行
 go get github.com/astaxie/beego
 go get github.com/go-sql-driver/mysql
 go get github.com/eclipse/paho.mqtt.golang

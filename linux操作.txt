@@ -21,3 +21,10 @@ sed "s/7000/7001/g" redis-7000.conf > redis-7001.conf
 文件写入
 echo haha >> a.txt #添加
 echo haha > a.txt  #删除原有内容写入
+
+
+保持ssh连接
+在/etc/ssh/ssh_config文件里加两个参数
+
+TCPKeepAlive yes
+ServerAliveInterval 300

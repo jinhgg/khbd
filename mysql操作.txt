@@ -13,6 +13,11 @@ mysqldump -u username -p dbname > /home/ljh/BackupName.sql
 数据库还原
 mysql -u root -p < /home/ljh/BackupName.sql
 
+设置远程访问
+vim /etc/mysql/mysql.conf.d/mysqld.cnf
+修改:bind-address = 0.0.0.0
+service mysql restart
+
 修改my.cnf后重启
 service mysql restart
 service mysql start
