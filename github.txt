@@ -1,4 +1,8 @@
-防止服务器push头像错误:
+执行这两条命令,相当于创建.gitconfig并写入email和name
+git config --global user.email "970402782@qq.com"
+git config --global user.name "jinhgg"
+还是不够的,虽然git已经把你记住了,但是git push的时候github还会让你输入用户名密码
+终极方案:
 vim ~/.gitconfig
 复制以下内容
 [credential]  
@@ -9,11 +13,6 @@ vim ~/.gitconfig
 重新登录服务器       
 
 ===============================================================
-执行这两条命令,相当于创建.gitconfig并写入email和name
-git config --global user.email "970402782@qq.com"
-git config --global user.name "jinhgg"
-还是不够的,虽然git已经把你记住了,但是git push的时候github还会让你输入用户名密码
-
 
 git config --global --unset http.proxy
 git config --global --unset https.proxy
