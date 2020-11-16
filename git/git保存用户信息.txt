@@ -1,0 +1,14 @@
+执行这两条命令,相当于创建.gitconfig并写入email和name
+git config --global user.email "970402782@qq.com"
+git config --global user.name "jinhgg"
+还是不够的,虽然git已经把你记住了,但是git push的时候github还会让你输入用户名密码
+终极方案:
+vim ~/.gitconfig
+复制以下内容
+[credential]  
+    helper = store  
+[user]
+    email = 970402782@qq.com
+    name = jinhgg
+
+这样第一次push的时候输入一次用户名密码,后面不需要再输入
