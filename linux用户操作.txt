@@ -1,0 +1,8 @@
+1.新建用户
+adduser [username]
+2.将用户加入root权限
+sudo chmod +w /etc/sudoers
+参考以下修改
+root    ALL=(ALL:ALL) ALL
+ljh     ALL=(ALL:ALL) ALL 
+
