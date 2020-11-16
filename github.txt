@@ -10,8 +10,8 @@ vim ~/.gitconfig
 [user]
     email = 970402782@qq.com
     name = jinhgg
-重新登录服务器       
 
+这样第一次push的时候输入一次用户名密码,后面不需要再输入
 ===============================================================
 
 git config --global --unset http.proxy
