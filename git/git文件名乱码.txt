@@ -1,0 +1,7 @@
+执行
+git config --global core.quotepath false
+或者在.gitconfig中加入
+[core]
+    quotepath = false
+
+二者等价
