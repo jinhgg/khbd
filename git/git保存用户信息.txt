@@ -10,5 +10,7 @@ vim ~/.gitconfig
 [user]
     email = 970402782@qq.com
     name = jinhgg
+[core]
+    quotepath = false
 
 这样第一次push的时候输入一次用户名密码,后面不需要再输入
