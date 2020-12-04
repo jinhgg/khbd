@@ -1,0 +1,9 @@
+查看服务器操作系统
+cat /etc/redhat-release
+
+查看内存大小
+free -g # 以g为单位
+free -m # 以m为单位
+
+查看硬盘容量
+df -h

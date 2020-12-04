@@ -1,0 +1,5 @@
+保持ssh连接
+在/etc/ssh/ssh_config文件里加两个参数
+
+TCPKeepAlive yes
+ServerAliveInterval 300
