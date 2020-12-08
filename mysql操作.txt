@@ -1,11 +1,27 @@
 
-sudo apt-get install mysql-server
-sudo apt-get install mysql-client 
-sudo apt-get install libmysqlclient-dev
+1.安装
+apt install mysql-server
+2.启动停止状态查看
+service mysql status
+service mysql start
+service mysql stop
+service mysql restart
+3.创建超级用户并授权
+create user 'ljh'@'%' identified by '123';
+GRANT ALL PRIVILEGES ON *.* TO 'ljh'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+4.重置密码
+SET PASSWORD FOR root@'localhost' = PASSWORD('password');
+
+=================================以下已不适用===========================================
+sudo apt install mysql-server
+sudo apt install mysql-client 
+sudo apt install libmysqlclient-dev
 
 
 创建超级用户
 GRANT ALL ON *.* TO 'ljh'@'%' IDENTIFIED BY '123' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO ljh@% IDENTIFIED BY '123' WITH GRANT OPTION;
 创建数据库
 CREATE DATABASE `BaoBao_v2` DEFAULT CHARACTER SET = `utf8mb4`;
 数据库导出
@@ -22,3 +38,5 @@ service mysql restart
 service mysql restart
 service mysql start
 service mysql stop
+
+

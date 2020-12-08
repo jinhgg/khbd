@@ -1,0 +1,4 @@
+把服务器上的文件拷贝到本地
+scp root@47.92.147.61:/root/knoin.zip C:\Users\lijinhang
+把本地文件传到服务器
+scp C:\Users\lijinhang\desktop\source.txt root@47.92.147.61:/root/
