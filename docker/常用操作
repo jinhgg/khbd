@@ -1,0 +1,5 @@
+运行容器
+docker run -it --name knoinWeb -p 80:80 -p 443:443 -p 8000:8000 -v /root/knoinWeb:/root/knoinWeb/ ubuntu:20.04
+文件复制
+docker cp /opt/test/file.txt mycontainer:/opt/testnew/
+docker cp mycontainer:/opt/testnew/file.txt /opt/test/
