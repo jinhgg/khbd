@@ -1,5 +1,7 @@
 查看服务器操作系统
 cat /etc/redhat-release
+查看服务器多少位
+uname -m
 
 查看内存大小
 free -g # 以g为单位

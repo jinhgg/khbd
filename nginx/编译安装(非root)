@@ -1,0 +1,12 @@
+1.下载nginx安装包解压
+2.安装依赖
+yum install gcc pcre-devel zlib-devel -y
+3.创建安装目录
+mkdir /home/ljh/nginx
+4.进入解压目录编译安装
+./configure --prefix=/home/ljh/nginx  # --prefix指定安装目录
+make 
+make install
+
+这时已经安装完成，去/home/ljh/nginx下看，sbin下面是nginx的命令路径
+4.修改端口运行nginx
