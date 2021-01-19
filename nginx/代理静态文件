@@ -1,0 +1,20 @@
+server {
+        listen       1080;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+        ###################这部分是新加的内容############
+        location /upload {
+            root   /home/lijh/knoinWeb/knoin_backend;
+            autoindex on;
+        }
+        ################################################
+
+注意：路径问题可以看nginx的error.log报错提示
