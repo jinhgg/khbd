@@ -13,6 +13,9 @@ FLUSH PRIVILEGES;
 4.重置密码
 SET PASSWORD FOR root@'localhost' = PASSWORD('password');
 
+
+pip install mysqlclient # 报错 yum install mariadb-devel -y
+
 =================================以下已不适用===========================================
 sudo apt install mysql-server
 sudo apt install mysql-client 
