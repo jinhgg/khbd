@@ -6,3 +6,5 @@
 3.Root path 服务器项目路径
 4.点击Mappings
 Deployment path 设为 /
+
+这是修改本地文件在upload服务器文件也会跟着变 可以设置为自动upload
