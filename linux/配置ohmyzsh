@@ -1,0 +1,83 @@
+方式一 ：通过以下两个脚本
+脚本一：
+#!/bin/bash
+
+echo ">>> start auto install ohmyzsh <<<"
+
+echo "199.232.68.133 raw.github.com" >> /etc/hosts
+echo "199.232.68.133 raw.githubusercontent.com" >> /etc/hosts
+
+apt update
+apt install -y git zsh curl
+
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+
+脚本二：
+#!/bin/bash
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
+
+sed -i "s/plugins=(git)/plugins=(\\ngit\\nsudo\\nzsh-syntax-highlighting\\nzsh-autosuggestions\\n)/g" ~/.zshrc
+echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
+source ~/.zshrc
+
+方式二：编译安装
+
+1.安装zsh
+
+mkdir zsh && cd zsh  # 新建文件夹
+wget https://sourceforge.net/projects/zsh/files/latest/download/zsh-5.7.1.tar.xz  # 下载最新版本zsh
+xz -d zsh-5.7.1.tar.xz  # .tar.xz 文件需要解压两次
+tar -xvf zsh-5.7.1.tar
+cd zsh-5.7.1
+./configure --prefix=/home/ljh/zsh  # 指定路径configure
+make && make install  # 安装
+
+./configure 时出现问题
+
+"""
+  configure: error: "No terminal handling library was found on your system.
+  This is probably a library called 'curses' or 'ncurses'.  You may
+  need to install a package called 'curses-devel' or 'ncurses-devel' on your
+  system."
+  See `config.log' for more details
+"""
+
+解决方法：
+
+将以下写入~/.bashrc并执行source ~/.bashrc
+export CXXFLAGS="-fPIC"
+export CFLAGS="-fPIC"
+export NCURSES_HOME=$HOME/ncurses  # 你自己的 ncurses 目录
+export PATH=$NCURSES_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$NCURSES_HOME/lib:$LD_LIBRARY_PATH
+export CPPFLAGS="-I$NCURSES_HOME/include" LDFLAGS="-L$NCURSES_HOME/lib"
+
+安装ncurses
+
+cd ~ && mkdir ncurses && cd ncurses 
+wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.1.tar.gz  # 下载最新版本ncurses
+tar -xzvf ncurses-6.1.tar.gz  # 解压
+cd ncurses-6.1
+./configure --prefix=/home/ljh/ncurses --with-shared --without-debug --enable-widec  # 指定路径configure
+make && make install  # 安装
+
+这时候重新回zsh目录执行安装
+cd ~/zsh/zsh-5.7.1
+./configure --prefix=/home/ljh/zsh
+make && make install
+
+2.安装ohmyzsh
+将以下写到~/.bashrc
+export PATH=$HOME/zsh/bin:$PATH
+执行以下命令安装
+sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+安装插件
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
+配置
+sed -i "s/plugins=(git)/plugins=(\\ngit\\nsudo\\nzsh-syntax-highlighting\\nzsh-autosuggestions\\n)/g" ~/.zshrc
+echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
+source ~/.zshrc
