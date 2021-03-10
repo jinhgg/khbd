@@ -1,0 +1,20 @@
+1.添加解析记录
+在阿里云域名管理添加一条解析记录，如果有域名jinhgg.com,添加api.jinhgg.com
+2.配置nginx
+新建一个.conf文件，内容如下
+server {
+        listen       80;
+        #多个域名可以同时监听80端口
+        server_name  api.jinhgg.com;
+
+        location / {
+            root   /www/wwwroot/ceshi;
+        }
+
+        #以下这两行一定要加不然没地方看报错信息
+        access_log  /root/h5/access.log;
+        error_log  /root/h5/error.log;
+}
+
+注意：
+如果是编译安装的nginx，是无法代理/root下面的资源的 出现403 forbiden
