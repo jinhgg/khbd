@@ -1,6 +1,4 @@
 1.把服务器上的项目拖到本地
-
-
 打开Pycharm Tools - Deployment - Configuration - + sftp
 2.设置好ssh连接
 3.Root path 服务器项目路径

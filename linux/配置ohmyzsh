@@ -1,4 +1,4 @@
-方式一 ：通过以下两个脚本
+方式一 ：通过以下两个脚本（ubuntu）
 脚本一：
 #!/bin/bash
 
@@ -10,6 +10,7 @@ echo "199.232.68.133 raw.githubusercontent.com" >> /etc/hosts
 apt update
 apt install -y git zsh curl
 
+# 可以把sh文件下下来,把里面的github.com替换为github.com.cnpmjs.org然后sh -c ./install.sh 执行
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 
@@ -73,11 +74,30 @@ make && make install
 将以下写到~/.bashrc
 export PATH=$HOME/zsh/bin:$PATH
 执行以下命令安装
+(可以把sh文件下下来,把里面的github.com替换为github.com.cnpmjs.org然后sh -c ./install.sh 执行)
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 安装插件
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
 配置
+sed -i "s/plugins=(git)/plugins=(\\ngit\\nsudo\\nzsh-syntax-highlighting\\nzsh-autosuggestions\\n)/g" ~/.zshrc
+echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
+source ~/.zshrc
+
+
+centos 下安装
+1.安装zsh
+yum -y install zsh
+2.切换默认shell为zsh
+chsh -s /bin/zsh
+3.执行安装脚本
+(可以通过代理把sh文件下下来,把里面的github.com替换为github.com.cnpmjs.org然后sh -c ./install.sh 执行)
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+4.安装插件
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
+5.配置
 sed -i "s/plugins=(git)/plugins=(\\ngit\\nsudo\\nzsh-syntax-highlighting\\nzsh-autosuggestions\\n)/g" ~/.zshrc
 echo "export PATH=$PATH:~/.local/bin" >> ~/.zshrc
 source ~/.zshrc

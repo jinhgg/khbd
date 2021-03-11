@@ -1,0 +1,12 @@
+systemctl start/stop firewalld
+systemctl enable/disable firewalld # 开机启动
+添加端口
+firewall-cmd --zone=public --add-port=8000/tcp --permanent
+禁用端口
+firewall-cmd --zone=public --remove-port=8000/tcp --permanent
+# 修改后重载（错误的，废弃）
+# firewall-cmd --reload
+应该重新启动
+systemctl restart firewalld
+查看开放的端口
+firewall-cmd --permanent --zone=public --list-ports
