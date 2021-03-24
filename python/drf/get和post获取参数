@@ -1,0 +1,4 @@
+不管继承什么apiview
+
+request.GET.get() # 获取get参数http://xxx.com/user?name=lijinhang
+request.POST.get() # 获取post参数http://xxx.com/user/   {'name':'lijinhang'}

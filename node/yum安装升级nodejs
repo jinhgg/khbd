@@ -1,0 +1,6 @@
+1.安装node.js
+yum install -y nodejs
+2.安装n管理包
+npm install -g n
+3.安装新版本node.js
+n 14.16.0 stable
