@@ -1,0 +1,4 @@
+location / {
+    root /www/wwwroot/wx-api/dist;
+    try_files $uri $uri/ /index.html; # 只要加这一行就行
+}
