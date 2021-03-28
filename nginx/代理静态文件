@@ -21,6 +21,6 @@ server {
 注意：路径问题可以看nginx的error.log报错提示 位置： /var/log/nginx/error.log 
 搞清楚哪个是真正的nginx配置文件，不然改半天没变化
 如果是编译安装的nginx，是无法代理/root下面的资源的 出现403 forbiden
-
+403 forbidden (13: Permission denied) 保证nginx配置uesr是root，nginx的进程用户也是root
 
 
