@@ -1,0 +1,5 @@
+1.生成access token
+在github头像下拉框点击settings > Developer settings > Personal access tokens > generate new token
+2.克隆到本地
+git clone https://<token>@github.com/<用户名>/<仓库名>
+例如: git clone https://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@github.com/jinhgg/knoin_platform.git
