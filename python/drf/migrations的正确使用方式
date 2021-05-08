@@ -1,0 +1,7 @@
+1.第一种情况：新项目还没有创建任何app
+python manage.py migrate
+
+
+2.第二种情况：有很多app，删库，重建，删除迁移文件
+分别makemigrations每一个app
+最后执行migrate

@@ -2,4 +2,21 @@
 在github头像下拉框点击settings > Developer settings > Personal access tokens > generate new token
 2.克隆到本地
 git clone https://<token>@github.com/<用户名>/<仓库名>
-例如: git clone https://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@github.com/jinhgg/knoin_platform.git
+例如: git clone https://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@github.com/jinhgg/knoin_platform.git
+
+
+settings
+currentUser
+fetchUserInfo
+
+{ 
+ settings: {};
+ userInfo: API.UserInfo | undefined;
+ fetchUserInfo: (data: API.VerifyParams) => Promise<API.UserResponse | undefined>;
+}
+
+{ 
+ settings?: Partial<ProSettings> | undefined;
+ currentUser?: UserInfo | undefined; 
+ fetchUserInfo?: ((data: VerifyParams) => Promise<UserResponse | undefined>) | undefined; 
+}

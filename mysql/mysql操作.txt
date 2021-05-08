@@ -11,10 +11,13 @@ create user 'ljh'@'%' identified by '123';
 GRANT ALL PRIVILEGES ON *.* TO 'ljh'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 4.重置密码
-SET PASSWORD FOR root@'localhost' = PASSWORD('password');
+SET PASSWORD FOR root@'localhost' = PASSWORD('123456'); // mysql 5.7
+ALTER USER 'root'@'%' IDENTIFIED BY '123456'; // mysql 8.0
 
 
-pip install mysqlclient # 报错 yum install mariadb-devel -y
+pip install mysqlclient 报错 
+yum install mariadb-devel -y // centos
+apt install python3-dev default-libmysqlclient-dev build-essential // ubuntu
 
 =================================以下已不适用===========================================
 sudo apt install mysql-server
