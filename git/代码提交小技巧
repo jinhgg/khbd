@@ -1,0 +1,4 @@
+git add . 和 git commit 在终端进行
+git push 通过github客户端提交, 可以走代理, 并且能解决密码怎么输都不对的问题
+
+git commit -m "" // 一定要是双引号
