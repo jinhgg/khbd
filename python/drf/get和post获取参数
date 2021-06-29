@@ -1,4 +1,5 @@
 不管继承什么apiview
-
-request.GET.get() # 获取get参数http://xxx.com/user?name=lijinhang
-request.POST.get() # 获取post参数http://xxx.com/user/   {'name':'lijinhang'}
+get:
+request.query_params // dict
+除了get:
+request.data // dict
