@@ -1,0 +1,27 @@
+1.static
+STATIC_URL = '/static/' # 这一行是本来就有的
+# 在下面添加这几行:
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+# 这样就能访问ip:8000/static/xxx.css
+# 重点: 'static' 必须一致 
+
+2.template(就能覆盖django admin原有模板)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'), # 只需添加这一行, 就能覆盖django admin原有的模板
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
