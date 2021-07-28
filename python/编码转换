@@ -1,0 +1,17 @@
+>>> a = b'qwe'
+>>> a
+b'qwe'
+>>> type(a)
+<class 'bytes'>
+>>> b = str(a)
+>>> b
+"b'qwe'"
+>>> type(b)
+<class 'str'>
+>>> b
+"b'qwe'"
+>>> b = str(a, encoding='utf-8')
+>>> b
+'qwe'
+>>> type(b)
+<class 'str'>
