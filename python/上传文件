@@ -1,0 +1,38 @@
+一. 对于前端来说
+
+1. File 对象
+待上传的文件是一个File object, 类似:
+File {uid: "rc-upload-1627973158560-6", name: "新平台.txt", lastModified: 1624603030303, lastModifiedDate: Fri Jun 25 2021 14:37:10 GMT+0800 (中国标准时间), webkitRelativePath: "账号信息/新平台.txt", …}
+{
+    lastModified: 1624603030303
+    lastModifiedDate: Fri Jun 25 2021 14:37:10 GMT+0800 (中国标准时间) {}
+    name: "新平台.txt"
+    size: 31
+    type: "text/plain"
+    uid: "rc-upload-1627973158560-6"
+    webkitRelativePath: "账号信息/新平台.txt"
+    [[Prototype]]: File
+}
+
+2. 上传方式
+export async function genQPCRReportApi(file: any) {
+  const formData = new FormData()
+  formData.append("file", file)
+  return request("/mngs/qPCR-report/", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData,
+  })
+}
+
+3.在http请求中的格式
+files: (binary)
+
+二. 对于后端来说
+1.获取上传的文件
+file = request.FILES.get('file') // 单个
+file = request.FILES.getlist('files') // 多个
+
+
