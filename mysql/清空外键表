@@ -1,0 +1,3 @@
+SET FOREIGN_KEY_CHECKS=0;            #取消外键约束
+TRUNCATE TABLE  table_name;            
+SET FOREIGN_KEY_CHECKS=1;            #设置外键约束:
