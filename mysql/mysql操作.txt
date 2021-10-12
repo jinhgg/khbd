@@ -16,6 +16,8 @@ ALTER USER 'root'@'%' IDENTIFIED BY '123456'; // mysql 8.0
 
 
 pip install mysqlclient 报错 
+yum install python3-devel -y
+
 yum install mariadb-devel -y // centos
 apt install python3-dev default-libmysqlclient-dev build-essential // ubuntu
 
