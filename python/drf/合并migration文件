@@ -1,0 +1,20 @@
+1.首先要保证,目前的migration文件和数据库是同步的，通过执行
+python3 manage.py makemigrations appname
+
+2.看当前app已经生效的migration文件
+python3 manage.py showmigrations appname
+
+ [X] 0001_initial
+ [X] 0002_auto_20210715_1441
+ [X] 0003_auto_20210715_1449
+
+3.把文件前的 [x] 变成[ ]
+python3 manage.py migrate --fake appname zero
+
+4.删除app下的migrations文件下除init.py之外的所有迁移文件
+
+5.再次为这个app生成 0001_initial.py文件
+python3 manage.py makemigrations appname
+
+6.在数据库中的 migrations表中记录当前这个app 执行到 0001_initial.py
+python3 manage.py migrate appname --fake-inital
