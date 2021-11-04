@@ -1,4 +1,23 @@
 
+在docker ubuntu 20.04中安装 docker外也可以尝试 这是8.0版本
+1.安装
+apt install mysql-server
+2.启动停止状态查看
+service mysql status
+service mysql start
+service mysql stop
+service mysql restart
+3.此时无密码也可以登录, 需要调整
+mysql
+>USE mysql;
+>UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+>FLUSH PRIVILEGES;
+>exit;
+service mysql restart
+4.重置root密码
+mysql_secure_installation
+
+===================================在ubuntu20中安装=====================================
 1.安装
 apt install mysql-server
 2.启动停止状态查看

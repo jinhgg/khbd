@@ -1,0 +1,18 @@
+1.安装wget
+yum install -y wget
+2.备份现有源
+mv /etc/yum.repos.d /etc/yum.repos.d.backup
+3.设置新的yum目录
+mkdir /etc/yum.repos.d
+4.下载配置(一定要区分自己的系统版本)
+CentOS 6
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
+CentOS 7
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+CentOS 8
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+5.清除文件并重建元数据缓存
+yum clean all
+yum makecache
+6.更新
+yum update -y

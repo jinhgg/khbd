@@ -1,5 +1,8 @@
 查看服务器操作系统
+centos:
 cat /etc/redhat-release
+ubuntu:
+cat /etc/issue
 查看服务器多少位
 uname -m
 
@@ -8,4 +11,4 @@ free -g # 以g为单位
 free -m # 以m为单位
 
 查看硬盘容量
-df -h
+df -Th

@@ -1,3 +1,4 @@
+一.save/load
 1.把容器打包成镜像
 docker commit ef5db5c6693b skj:1.0 #此时生成了skj:1.0镜像
 2.把镜像导出到zip
@@ -6,3 +7,17 @@ docker save -o skj.zip skj:1.0
 docker load -i skj.tar #此时生成了skj:1.0镜像
 4.从镜像生成容器
 docker run -it --name knoinWeb -p 80:80 -p 443:443 -p 8000:8000 -v /root/knoinWeb:/root/knoinWeb/ ubuntu:20.04
+
+二.import/export
+一般不用这种方式
+
+
+docker save/load 和 docker import/export的区别:
+
+save/load:      
+容器 ==commit==> 镜像 ==save==> 压缩包 ==load==> 镜像 ==run==> 容器
+
+import/export:        
+                 容器 ==export==> 压缩包 ==import==> 镜像 ==run==> 容器
+
+本质都是打包成镜像再生成容器
