@@ -1,0 +1,110 @@
+==============非root用户安装supervisord=================
+1.pip install supervisord
+
+2.找到supervisord, supervisorctl, supervisord.conf所在位置
+which supervisord
+
+3.把默认的配置文件输出到自己的目录, 方便修改
+echo_supervisord_conf > /home/ljh/supervisord/supervisord.conf
+
+4.修改supervisord.conf配置文件
+[unix_http_server]
+file=/home/ljh/supervisord/supervisor.sock
+
+[supervisord]
+logfile=/home/ljh/supervisord/supervisord.log
+pidfile=/home/ljh/supervisord/supervisord.pid
+
+[supervisorctl]
+serverurl=unix:///home/ljh/supervisor/supervisor.sock
+
+[include]
+files = conf.d/*.conf
+
+5.部署项目
+mkdir /home/lijh/supervisor/logs/
+
+vim /home/ljh/supervisor/conf.d/auto_download.conf
+
+[program:auto_download]
+# 执行的命令, 有时要写绝对路径下面的directory不管用, 
+command=python3 auto_download.py 
+directory=/mnt/sda/platform/gz_download
+user=lijh
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+# 启动优先级
+priority=10
+stdout_logfile=/home/lijh/supervisor/logs/auto_download.log
+
+vim /home/ljh/supervisor/conf.d/knoin_backend.conf
+[program:knoin_backend]
+command=python3 manage.py runserver 0:8000
+directory=/home/lijh/knoinWeb/knoin_backend
+user=lijh
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+priority=10
+stdout_logfile=/home/lijh/supervisor/logs/knoin_backend.log
+
+vim /home/ljh/supervisor/conf.d/knoindx_backend.conf
+[program:knoindx_backend]
+command=uwsgi uwsgi.ini --gevent 100 --gevent-early-monkey-patch
+directory=/home/lijh/knoindx_backend
+user=lijh
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+priority=10
+stdout_logfile=/home/lijh/supervisor/logs/knoindx_backend.log
+
+vim /home/ljh/supervisor/conf.d/nginx.conf
+[program:nginx]
+command=/home/lijh/nginx/sbin/nginx -g 'daemon off;'
+directory=/home/lijh/nginx
+user=lijh
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+priority=10
+stdout_logfile=/home/lijh/supervisor/logs/nginx.log
+
+vim /home/ljh/supervisor/conf.d/task.conf
+[program:task]
+command=python3 task.py
+directory=/home/lijh/knoindx_backend
+user=lijh
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+priority=10
+stdout_logfile=/home/lijh/supervisor/logs/task.log
+
+6.常用命令
+启动supervisord
+supervisord -c /home/ljh/supervisor/supervisord.conf
+进入supervisorctl
+supervisorctl -c /home/ljh/supervisor/supervisord.conf
+修改配置后重载
+supervisorctl -c /home/ljh/supervisor/supervisord.conf reload
+重启某个项目
+supervisorctl -c /home/ljh/supervisor/supervisord.conf restart/stop/start 项目名/all
+
+7.命令映射
+在~/.bashrc或~/.zshrc中添加
+alias supervisord='supervisord -c /home/ljh/supervisor/supervisord.conf'
+alias supervisorctl='supervisorctl -c /home/ljh/supervisor/supervisord.conf'
+
+
+
+
+
+
+
