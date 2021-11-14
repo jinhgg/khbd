@@ -1,0 +1,8 @@
+pip install -U "celery[redis]"
+
+
+
+停止celery
+ps aux|grep 'celery'
+username  29042  0.0  0.6  23216 14356 pts/1    S+   00:18   0:01 /bin/celery worker ...
+sudo kill -9 process_id # here 29042
