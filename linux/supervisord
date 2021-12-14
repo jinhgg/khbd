@@ -1,3 +1,43 @@
+==============root用户安装supervisord=================
+
+yum install -y epel-release supervisor
+systemctl enable supervisord # 开机自启动
+systemctl start supervisord # 启动supervisord服务
+
+
+vim /etc/supervisord.conf
+[program:knoindx_backend]
+command=python3 -u manage.py runserver 0:8001 # 启动程序的命令
+directory=/home/lijh/knoindx_backend # knoindx_backend这个项目的目录
+user=lijh # 启动项目使用的用户
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+priority=10
+stdout_logfile=/home/lijh/knoindx_backend/logs/knoindx_backend.log # 指定输出到某个日志文件
+
+[program:task]
+command=python3 task.py # 启动程序的命令
+directory=/home/lijh/knoindx_backend  # knoindx_backend这个项目的目录
+user=lijh # 启动项目使用的用户
+autostart=true
+autorestart=true
+killasgroup=true
+redirect_stderr=true
+priority=10
+stdout_logfile=/home/lijh/knoindx_backend/logs/task.log # 指定输出到某个日志文件
+
+执行 supervisorctl reload
+
+执行 supervisorctl 进入控制台查看任务程序状态
+
+>start/stop + 程序名 可以开始/停止程序
+
+
+
+
+
 ==============非root用户安装supervisord=================
 1.pip install supervisord
 
