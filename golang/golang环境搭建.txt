@@ -1,3 +1,10 @@
+设置GOPROXY
+go env -w GOPROXY=https://goproxy.cn,direct
+
+
+
+=============================以下已经不适用=============================
+
 一、安装必备环境
 
 sudo apt-get install git golang-go vim sublime-text-installer
