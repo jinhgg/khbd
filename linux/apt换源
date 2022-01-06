@@ -1,3 +1,4 @@
+===================ubuntu20.04=============================
 1.备份
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
 2.换源
