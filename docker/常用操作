@@ -3,3 +3,8 @@ docker run -it --name knoinWeb -p 80:80 -p 443:443 -p 8000:8000 -v /root/knoinWe
 文件复制
 docker cp /opt/test/file.txt mycontainer:/opt/testnew/
 docker cp mycontainer:/opt/testnew/file.txt /opt/test/
+
+
+进入容器
+docker attach [容器名] # 直接进入docker的主程序 退出需要ctrl+p+q
+docker exec -it [容器名] bash # 开启一个容器的终端，类似ssh连接docker的操作系统
