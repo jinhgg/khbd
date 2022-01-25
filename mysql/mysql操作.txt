@@ -17,6 +17,10 @@ service mysql restart
 4.重置root密码
 mysql_secure_installation
 
+5.创建用户并赋予权限
+create user 'username'@'%' identified by 'password';
+grant all privileges on *.* to 'username'@'%' with grant option;
+
 ===================================在ubuntu20中安装（参考上面）=====================================
 1.安装
 apt install mysql-server
