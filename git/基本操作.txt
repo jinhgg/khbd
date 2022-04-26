@@ -1,3 +1,26 @@
+一般流程:
+1.创建并切换分支
+git checkout -b test_branch
+
+2.开发完成后执行git add 和 commit
+
+3.切换到主分支, 拉取最新代码
+git checkout master
+git pull
+注: git pull = git fetch + git merge 
+一般不改master分支的代码, 所以git pull强拉没有问题
+
+4.切回test_branch合并主分支
+git merge master
+
+5.提交test_branch分支
+git push origin test_branch
+
+6.在网页中提交合并分支的请求
+
+
+
+
 查看所有提交信息:版本号,作者,时间,提交说明
 git log 
 
