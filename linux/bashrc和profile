@@ -1,0 +1,22 @@
+全局
+/etc/profile
+/etc/bashrc
+
+单个用户
+~/.bash_profile
+~/.bashrc
+
+重启生效
+/etc/profile
+~/.bash_profile
+
+不重启生效
+/etc/bashrc
+~/.bashrc
+
+
+
+综上：
+重启生效排除掉，只在/etc/bashrc和~/.bashrc里面选择
+/etc/bashrc 只在打开终端时生效一次，切换用户不执行
+所以最保险的是~/.bashrc
