@@ -1,0 +1,20 @@
+1、source
+source a.sh
+在当前shell内去读取、执行a.sh
+a.sh不需要有执行权限
+source a.sh命令可以简写为. a.sh
+
+2、sh/bash
+sh a.sh / bash a.sh
+都是打开一个subshell去读取执行a.sh
+a.sh不需要有执行权限
+通常在subshell里运行的脚本里设置变量不会影响到父shell
+sh和bash的区别:
+没有区别, 大多数操作系统sh指向bash
+
+3、./
+./a.sh 
+#bash: ./a.sh: 权限不够 chmod +x a.sh ./a.sh
+打开一个subshell去读取、执行a.sh
+a.sh需要有执行权限
+可以用chmod +x添加执行权限
