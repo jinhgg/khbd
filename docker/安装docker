@@ -1,6 +1,9 @@
-centos:
+centos8:
+https://www.jianshu.com/p/286645ec14c0
+
+centos7:
 安装
-yum install docker
+yum install docker -y
 启动
 systemctl enable docker
 systemctl start docker
