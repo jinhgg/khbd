@@ -1,7 +1,22 @@
-设置GOPROXY
-go env -w GOPROXY=https://goproxy.cn,direct
+# 下载go安装包
+wget https://dl.google.com/go/go<版本号>.linux-amd64.tar.gz
+ 
+# 解压到/usr/local
+tar -zxvf go<版本号>.linux-amd64.tar.gz -C /usr/local
+ 
+# 创建GOPATH目录, 如果没有就创建
+mkdir -p ~/go/bin
 
+将以下内容写入~/.bashrc
+export GOROOT=/usr/local/go
+export GOPATH=/root/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
+# 检查是否安装成功
+go version
+ 
+# 设置go代理
+go env -w GOPROXY=https://goproxy.io,direct
 
 =============================以下已经不适用=============================
 
