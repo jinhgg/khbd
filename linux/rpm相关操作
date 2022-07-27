@@ -1,0 +1,25 @@
+1.查看包含哪些文件
+rpm -qpl *.rpm
+
+2.解决包冲突
+删除包
+rpm -e --nodeps 包名
+或者跳过
+yum install --exclude 包名
+
+
+制作rpm包
+安装rpmbuild组件
+yum install -y rpmdevtools rpm-build
+
+生成rpmbuild目录
+rpmdev-setuptree
+
+生成.spec文件
+rpmdev-newspec hello.spec
+
+打包
+rpmbuild -bb SPEC/hello.spec
+
+查看.spec的宏
+rpm --showrc|less
