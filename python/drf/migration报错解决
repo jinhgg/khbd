@@ -1,0 +1,4 @@
+python manage.py migrate 过程中报错 但是已经建立了一些表 怎么退回执行前的状态
+    删除django_migrations中最新一条记录
+    删除刚才创建的表和外键
+    再执行一次migrate
