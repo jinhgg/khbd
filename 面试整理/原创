@@ -1,2 +1,6 @@
 1.centos安装nginx:1.20，yum没有指定版本的怎么办
 2.bash/sh ./ source 这几种执行shell脚本的区别
+3.python manage.py migrate 过程中报错 但是已经建立了一些表 怎么退回执行前的状态
+    删除django_migrations中最新一条记录
+    删除创建的表
+    再执行一次migrate
