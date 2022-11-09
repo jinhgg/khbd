@@ -4,3 +4,7 @@
     删除django_migrations中最新一条记录
     删除创建的表
     再执行一次migrate
+4.怎么看一个程序占用的cpu 内存是多少
+ps -aux 
+hpcadmin  236490 89.5  0.0
+参数依次代表 用户名 pid cpu(%) 内存(%)

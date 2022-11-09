@@ -1,0 +1,21 @@
+import inspect
+    
+def c():
+    callnamer = inspect.stack()
+    for i in callnamer:
+        # 1文件名，2行数，3函数名
+        print(i[1],i[2],i[3])
+
+def b():
+    c()
+
+def a():
+    b()
+
+a()
+
+# 输出结果：
+# c:/Users/lijh60/Desktop/lico/test_scripts/ladl_test/main_test.py 4 c
+# c:/Users/lijh60/Desktop/lico/test_scripts/ladl_test/main_test.py 10 b
+# c:/Users/lijh60/Desktop/lico/test_scripts/ladl_test/main_test.py 13 a
+# c:/Users/lijh60/Desktop/lico/test_scripts/ladl_test/main_test.py 16 <module>
