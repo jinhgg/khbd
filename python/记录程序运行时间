@@ -1,0 +1,6 @@
+import time
+start =time.time()
+#中间写上代码块
+end = time.time()
+print('Running time: %s Seconds'%(end-start))
+#单位是秒
