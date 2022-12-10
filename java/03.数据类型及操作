@@ -1,0 +1,53 @@
+public class PrimitiveTypeTest {
+    public static void main(String[] args) {
+        // 1.java有8种数据类型，其中6种数字类型，1种bool类型，1种字符串类型
+
+        // byte 默认0 范围(-128, 127) 对应的包装类: Byte
+        byte a = 100;
+        // short 默认0 范围(-32768, 32767) 对应的包装类: Short
+        short b = 1000;
+        // int 默认0 范围(-2,147,483,648, 2,147,483,647) 对应的包装类: Integer
+        int c = 100000;
+        // long 默认0L 范围(-2^63, 2^63 -1) 对应的包装类: Long
+        long d = 100000L;
+        // float 默认0.0f 对应的包装类: Float
+        float e = 234.5f;
+        // double 默认0.0d 对应的包装类: Double
+        double f = 0.0d; 
+        // char 字符类型, 只能存一个元素，不是字符串，是编码 对应的包装类: Charater
+        char name = 'A'; 
+
+        // int 相关操作
+        int number1 = 1;
+        int number2 = 2;
+        number1++; // 自增
+        number2 += number1;
+        // 三元运算符
+        int max = number1 > number2 ? number1 : number2;
+        // System.out.println(number1 > number2 ? number1 : number2);
+
+        // 数组
+        int[] arr1 = { 1, 2, 3 };
+        arr1[0] = 100; // 修改值
+        int sum = 0;
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] += 1; // 循环中可以修改数组值
+            sum += arr1[i]; // 数组遍历
+        }
+        String[] arr2 = new String[10]; // 动态初始化，10个元素的string数组
+
+        
+        // System.out.println(sum);
+        // System.out.println(a);
+        // System.out.println(b);
+        // System.out.println(c);
+        // System.out.println(d);
+        // System.out.println(e);
+        // System.out.println(arr1);
+
+    }
+    // 定义方法
+    public static int getSum(int num1, int num2) {
+        return num1 + num2;
+    }
+}

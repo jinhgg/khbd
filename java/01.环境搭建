@@ -1,0 +1,9 @@
+1.打开https://www.oracle.com/java/
+
+2.点击Download Java
+
+3.选择windows操作系统下的，.exe结尾的安装包下载
+
+4.双击打开安装，一直下一步就可以
+
+注意：最新版本的java不需要配置环境变量，老版本需要配置，遇到了自己去查一下

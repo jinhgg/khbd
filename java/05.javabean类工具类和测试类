@@ -1,0 +1,62 @@
+// private/public 决定能不能直接通过.调用
+// 有无static 决定是不是静态属性/方法(类属性/方法)
+1.javabean类
+public class Student {
+    // 这三个属性是手动输入，下面所有方法都是alt+Insert快捷键生成
+    private String name;
+    private int age;
+    private char gender;
+
+    // 构造方法，一般写两个，空参和有参
+    public Student() {
+    }
+
+    public Student(String name, int age, char gender) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+
+    // 实例方法不加static，加了就是类方法，类似py的@classmethod
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public char getGender() {
+        return gender;
+    }
+
+    public void setGender(char gender) {
+        this.gender = gender;
+    }
+}
+2.工具类
+public class ArrayUtil {
+    // 私有化构造方法，不让外界创建对象
+    private ArrayUtil()
+
+    public static int getSum(){}
+    public static int getMax(){}
+    public static int getMin(){}
+}
+3.测试类: 包含main方法的类
+public class TestDemo {
+    public static void main(String[] args) {
+        // 测试JavaBean类
+        Student s = new Student()
+        // 测试工具类
+        ArrayUtil.getSum()
+    }
+}

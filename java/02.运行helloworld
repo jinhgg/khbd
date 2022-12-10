@@ -1,0 +1,11 @@
+1.创建HelloWorld.java文件(文件名要和类名相同)
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+
+2.在终端运行javac HelloWorld.java
+这时候会生成HelloWorld.class文件
+
+3.在终端执行java HelloWorld，会输出Hello World

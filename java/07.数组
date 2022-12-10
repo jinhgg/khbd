@@ -1,0 +1,29 @@
+数组{
+    初始化
+        int[] arr1 = { 1, 2, 3 };
+        int[] arr2 = new int[3];
+    修改值
+        arr[0] = 1;
+    获取长度
+        int length = arr.length;
+}
+
+集合{
+    说明：集合不能存基本数据类型，只能存基本数据类型对应的包装类
+    初始化
+        ArrayList<String> list = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+    添加
+        list.add("aaa");
+    删除
+        boolean res = list.remove("bbb"); // 可以接收返回值，也可以不接收，成功是true
+        String res = list.remove(0); // 可以根据索引删, 成功返回被删除的元素
+    修改
+        String res = list.set(0, "ccc"); 返回修改前的元素
+    查询
+        String res = list.get(0);
+    获取长度
+        int l = list.size();
+
+        
+}
