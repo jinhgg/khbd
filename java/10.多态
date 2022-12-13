@@ -1,0 +1,35 @@
+public class TestDemo {
+    public static void main(String[] args) {
+        Person p = new Person();
+        Teacher t = new Teacher();
+        Student s = new Student();
+
+        p.say();
+        t.say();
+        s.say();
+    }
+    public static void test(Person p) {
+        p.say();
+    }
+}
+
+class Person {
+    public void say() {
+        System.out.println(123);
+    }
+}
+
+class Teacher extends Person {
+    @Override
+    public void say() {
+        System.out.println(456);
+    }
+
+}
+
+class Student extends Person {
+    @Override
+    public void say() {
+        System.out.println(789);
+    }
+}

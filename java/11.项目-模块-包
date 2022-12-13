@@ -1,0 +1,16 @@
+1.创建一个项目
+用idea创建一个Test的项目
+
+2.创建一个模块
+
+3.创建两个包
+src/
+    com/
+        itheima/
+            /domain
+            /test
+
+
+什么是包？
+包就是文件夹 文件开头会有文件夹的地址: package com.itheima.domain
+同一文件夹下，不用导包，否则要导包: import com.itheima.domain.Student

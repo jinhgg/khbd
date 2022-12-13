@@ -1,0 +1,73 @@
+public class TestDemo {
+    public static void main(String[] args) {
+        Student s = new Student();
+        s.test();
+    }
+}
+
+ class People {
+    /*
+     * 1.虚方法表：没有static private final的方法可以加到虚方法表
+     * 
+     * 2.重写@Overwrite：
+     * 子类方法和父类完全方法一样，除了访问权限必须>=父类(尽量保持一致)
+     * 只有虚方法表中的方法可以被重写
+     * 
+     * 3.子类需要重写构造方法，因为构造方法无法继承
+     */
+    private String name;
+    private int age;
+    public People() {}
+    public People(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+    private void inner() {
+        System.out.println("inner");
+    }
+    public void test() {
+        inner();
+    }
+    public void hello() {
+        System.out.println("hello");
+    }
+}
+
+class Student extends People {
+    private int grade;
+    
+    public Student() {
+        // 会执行父类的空参构造
+        // super();
+    }
+
+    public Student(String name, int age, int grade) {
+        super(name, age);
+        this.grade = grade;
+    }
+
+    @Override
+    public void hello() {
+        System.out.println("hello");
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+}

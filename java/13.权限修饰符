@@ -1,0 +1,22 @@
+一个class的属性能不能通过.调用？ 要看权限修饰符
+
+权限由上往下逐渐变小
+1.public
+同class内 
+同包内
+子类
+无关类
+
+2.protected
+同class内 
+同包内
+子类
+
+3.什么都不加
+同class内 
+同包内
+
+4.private
+同class内
+
+常用的是public和private

@@ -1,0 +1,59 @@
+1.局部代码块
+执行完立刻消失
+public void test{
+    {
+        int a = 10;
+        System.out.println(a);
+    }
+    // 报错，因为a已经被释放掉了
+    System.out.println(a);
+}
+
+2.构造代码块
+执行空参构造或有参构造前执行的代码
+public class Student {
+    // 这三个属性是手动输入，下面所有方法都是alt+Insert快捷键生成
+    private String name;
+    private int age;
+
+    {
+        System.out.println("我在构造方法前执行");
+    }
+    
+    public Student() {}
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+
+}
+
+3.静态代码块
+调用某个类的时候执行一次, 重点是只执行一次
+用于数据初始化
+import java.util.ArrayList;
+
+public class TestDemo {
+    // 这里用static是因为，
+    // 1.初始化的是类属性，不是实例属性
+    // 2.被static修饰的方法只能操作静态属性，静态代码块只能操作静态变量
+    static ArrayList<Student> list = new ArrayList<>();
+    // 这里用static是因为，静态代码块就是这样写的
+    static {
+        Student s1 = new Student();
+        Student s2 = new Student();
+        Student s3 = new Student();
+        list.add(s1);
+        list.add(s2);
+        list.add(s3);
+    }
+    public static void main(String[] args) {
+        System.out.println(list);
+    }
+}
+
+class Student {
+    public Student() {}
+}
