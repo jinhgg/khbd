@@ -1,21 +1,13 @@
-import java.util.ArrayList;
+抽象类存在的意义：
+通过看类的抽象方法，就能知道子类一定具有这些方法，规范子类的方法实现
 
-public class TestDemo {
-    // 这里用static是因为，初始化的是类属性，不是实例属性
-    static ArrayList<Student> list = new ArrayList<>();
-    // 这里用static是因为，静态代码块就是这样写的
-    static {
-        Student s1 = new Student();
-        Student s2 = new Student();
-        Student s3 = new Student();
-        list.add(s1);
-        list.add(s2);
-        list.add(s3);
-    }
-    public static void main(String[] args) {
-        System.out.println(list);
-    }
-}
+抽象类中不一定有抽象方法，有抽象方法的类一定是抽象类
+
+抽象类可以有构造方法，但是不能创建对象
+
+继承抽象类的子类有两种情况:
+    1.是抽象类
+    2.不是抽象类，必须重写所有抽象方法(idea alert+回车 implement method)
 
 abstract class Person {
     private String name;

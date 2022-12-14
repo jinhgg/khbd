@@ -1,3 +1,4 @@
+// 一个文件只能有一个public class
 // private/public 决定能不能直接通过.调用
 // 有无static 决定是不是静态属性/方法(类属性/方法)
 1.javabean类
