@@ -1,0 +1,35 @@
+jdk9以后才有的
+接口中使用到私有方法的情况：
+有两个默认方法有相同的代码块，需要抽离出来
+但是抽离出来的方法只给接口内的方法调用，
+所以要变成私有方法
+
+interface InnerA {
+    // 只为接口内部默认方法服务
+    private void show() {
+        System.out.println("show");
+    }
+    public default void show1() {
+        show();
+        System.out.println("show1");
+    }
+    public default void show2() {
+        show();
+        System.out.println("show2");
+    }
+}
+
+interface InnerB {
+    // 只为接口内部静态方法服务
+    private static void show() {
+        System.out.println("show");
+    }
+    public static void show1() {
+        show();
+        System.out.println("show1");
+    }
+    public static void show2() {
+        show();
+        System.out.println("show2");
+    }
+}

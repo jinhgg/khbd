@@ -12,7 +12,6 @@
 abstract class Person {
     private String name;
     private int age;
-    public abstract void work();
 
     // 虽然抽象类不能创建对象，但构造方法也是有用的
     // 带参构造可以让子类super(name, age)调用
@@ -33,6 +32,9 @@ abstract class Person {
     public void setAge(int age) {
         this.age = age;
     }
+
+    public abstract void work();
+
 }
 
 class Student extends Person {

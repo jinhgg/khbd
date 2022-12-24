@@ -24,6 +24,8 @@
         String res = list.get(0);
     获取长度
         int l = list.size();
+    获取指定元素索引
+        int i = list.indexof
 
         
 }
