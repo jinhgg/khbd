@@ -1,0 +1,20 @@
+1.创建java工程：
+依次点击File - New - Other - Java Project
+
+输入Project name直接点Finish
+
+2.在java工程下创建class：
+右击src - New - Class - 输入Package(com.testdemo.www)和Name(TestDemo) - 勾选主方法 - Finish 
+
+
+3.创建web工程：
+依次点击File - New - Other - Dynamic Web Project 
+输入Project name和Dynamic web module version选2.5(2.5和tomcat9是匹配的，其他版本不匹配无法运行)
+一直下一步就可以
+在WEB-INF文件夹同目录下新建index.html
+右键项目名，run as server
+
+4.导出war包, 放到tomcat/webapps下
+
+5.cmd运行startup.bat(需要配置JAVA_HOME=JDK目录环境变量)
+

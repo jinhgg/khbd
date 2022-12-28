@@ -25,7 +25,10 @@
     获取长度
         int l = list.size();
     获取指定元素索引
-        int i = list.indexof
+        int i = list.indexOf(1)
+        int i = list.lastIndexOf(2)
+    截取
+        ArrayList list2 = list.subList(0,3)
 
         
 }

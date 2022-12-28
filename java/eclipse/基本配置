@@ -1,0 +1,16 @@
+1.配置tomcat运行环境：
+
+下载tomcat64位zip包解压
+
+在eclipse中点击 window - Preferences - Server - Runtime Environments - Add - Apache TransformStreamDefaultController(对应版本号)
+
+勾选Create a new local server
+
+选Tomcat的解压目录，选择指定版本的jdk
+
+点击Apply and Close
+
+2.解决控制台输出乱码问题
+右键run as - Run Configurations - 点击>>展开 - common
+把encoding改成gbk
+

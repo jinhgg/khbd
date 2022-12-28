@@ -7,6 +7,7 @@ public class TestDemo {
         list.add(2);
         list.add(3);
         System.out.println(list.indexOf(2));
+        System.out.println(list.subList(0, 0));
         
 
     }

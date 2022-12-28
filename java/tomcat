@@ -1,0 +1,5 @@
+1.运行tomcat
+首先配置环境变量JAVA_HOME=JDK目录
+
+2.cmd里执行startup.bat
+闪退又两种情况，环境变量没配，8080端口占用
