@@ -1,0 +1,68 @@
+1.创建dy web 项目
+依次点击File - New - Other - Dynamic Web Project 
+输入Project name和Dynamic web module version选2.5(2.5和tomcat9是匹配的，其他版本不匹配无法运行)
+一直下一步就可以
+
+2.写一个class实现servlet接口 servletTest
+展开刚才创建的项目，Java Resources, 右击src/main/java - New - Class
+输入Package：com.ittest.servletTest
+输入Name：servletTest
+点击interfaces右边的Add - servlet
+点击finish，这时候创建的class会自动重写servlet的方法
+添加一个空参构造
+可以在每一个方法里面加输出
+
+3.连接tomcat源码重写servlet接口方法
+上面自动重写的方法参数命名是不规范的
+先下载tomcat源码包https://tomcat.apache.org/download-90.cgi  -> Source Code Distributions -> zip
+点击servletTest.java文件当中的 implements Servlet跳转到连接源码页面
+选项选第二个，在输入zip包的文件路径
+删除servletTest的所有方法，鼠标放在servletTest上重新生成代码
+
+
+3.再写一个class实现servlet接口 servletTest2
+
+然后打开WEB-INF下的web.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>servletTest</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+  </welcome-file-list>
+  
+  <!-- 这部分是需要添加的-->
+  <servlet>
+	  <!-- name和class的映射-->
+	  <servlet-name>some-servlet</servlet-name>
+	  <!-- 这部分是右击类copy qualified name粘贴来的-->
+	  <servlet-class>com.ittest.servletTest.someServletTest</servlet-class>
+	  <!-- load-on-startup代表启动时创建servlet，否则第一个请求进来才创建-->
+	  <!-- 数值代表优先级 0最高 越大优先级越低-->
+	  <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+	  <!-- url和name的映射-->
+	  <servlet-name>some-servlet</servlet-name>
+	  <url-pattern>/some</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+	  <servlet-name>some-servlet2</servlet-name>
+	  <servlet-class>com.ittest.servletTest.someServletTest2</servlet-class>
+	  <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+	  <servlet-name>some-servlet2</servlet-name>
+	  <url-pattern>/some2</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
+
+右键项目名，run as server
+在自动打开的浏览器url(http://localhost:8080/servletTest/)后面加/some
+这时候console会看到输出

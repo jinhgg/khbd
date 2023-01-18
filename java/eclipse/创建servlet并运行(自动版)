@@ -1,0 +1,10 @@
+1.创建dy web 项目
+依次点击File - New - Other - Dynamic Web Project 
+输入Project name和Dynamic web module version选2.5(2.5和tomcat9是匹配的，其他版本不匹配无法运行)
+一直下一步就可以
+
+2.创建一个servlet
+右键项目名 New - Other - 输入servlet并选择 - Next - 输入Java package和Class name - 一直Next
+
+3.运行项目
+右键项目名 run as server
