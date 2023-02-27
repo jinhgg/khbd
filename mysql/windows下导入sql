@@ -1,0 +1,8 @@
+进入mysql命令行
+
+use database;
+
+输入source
+
+把sql文件拖到命令行source的后面
+注意：sql文件目录不能有中文
