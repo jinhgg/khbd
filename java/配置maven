@@ -1,0 +1,37 @@
+1.安装maven
+下载maven：apache-maven-3.9.0-bin.zip
+https://maven.apache.org/download.cgi
+解压到指定目录
+
+2.配置maven仓库和镜像
+在maven解压的目录下新建repo
+修改conf/setting.xml
+    <localRepository>C:\apache-maven-3.9.0\repo</localRepository>
+
+    <mirror>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>        
+    </mirror>
+    其他的mirror删掉，只保留阿里云的
+
+
+3.添加环境变量
+右键此电脑 -> 属性 -> 高级系统设置 -> 环境变量 -> 新建MAVEN_HOME=C:\apache-maven-3.9.0
+新增PATH %MAVEN_HOME%\bin
+
+4.检查是否安装成功
+$mvn -v
+
+5.maven常用命令
+首先进入maven项目目录(pom.xml同级)
+$mvn compile # 将项目编译到target目录下
+$mvn clean # 将target目录删除
+$mvn package # 将web项目包成war包放到target目录下
+$mvn install # 将项目安装到本地maven仓库
+
+6.maven生命周期
+ clean
+ compile -> test -> package -> install (执行install会执行前面所有)
+ site
