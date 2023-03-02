@@ -1,0 +1,30 @@
+public class TestDemo {
+    public static void main(String[] args) {
+        Person<Integer> p1 = new Person<>();
+        Person<String> p2 = new Person<>();
+
+        p1.setIdNumber(11);
+        p2.setIdNumber("12");
+
+        Integer p1_idNumber = p1.getIdNumber();
+        String p2_idNumber = p2.getIdNumber();
+
+        System.out.println(p1_idNumber);
+        System.out.println(p2_idNumber);
+        
+    }
+}
+/*
+ * Person类中有个属性，在实例化的时候才定义类型
+ */
+class Person<T> {
+    private T idNumber;
+
+    public T getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(T idNumber) {
+        this.idNumber = idNumber;
+    }
+}

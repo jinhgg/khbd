@@ -23,6 +23,7 @@ class A {
     public <T> T test1(T t) {
         return t;
     }
+    //静态方法泛型化
     public static <T> T test2(T t) {
         return t;
     }

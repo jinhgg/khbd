@@ -1,0 +1,9 @@
+在vscode中运行springboot项目会中文乱码
+原因是powershell,cmd,java console的编码全部是gbk
+需要设置成utf8
+
+1.查看当前cmd的编码 936代表GBK 65001代表utf8
+$chcp
+2.修改成utf8
+$chcp 65001
+3.再次启动Java项目

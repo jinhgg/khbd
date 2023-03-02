@@ -35,3 +35,11 @@ $mvn install # 将项目安装到本地maven仓库
  clean
  compile -> test -> package -> install (执行install会执行前面所有)
  site
+
+7.使用maven命令创建项目
+在任意目录执行，会创建项目目录
+$mvn archetype:generate
+
+8.启动springboot项目
+$mvn spring-boot:run
+ 
