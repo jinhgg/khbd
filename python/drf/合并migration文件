@@ -17,4 +17,4 @@ python3 manage.py migrate --fake appname zero
 python3 manage.py makemigrations appname
 
 6.在数据库中的 migrations表中记录当前这个app 执行到 0001_initial.py
-python3 manage.py migrate appname --fake-inital
+python3 manage.py migrate appname --fake-initial
