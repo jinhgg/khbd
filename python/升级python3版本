@@ -1,0 +1,22 @@
+mkdir /home/python  # 创建文件夹
+cd /home/python # 进入创建的文件夹中
+
+yum -y update
+yum install -y zlib-devel bzip2-devel openssl-devel sqlite-devel readline-devel tk-devel libffi-devel gcc make 
+
+wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz 
+
+tar zxf Python-3.8.0.tgz 
+
+cd Python-3.8.0   # 进去解压后的目录
+./configure --prefix=/usr/local/python3  # 配置（并指定安装位置） 
+#  不要加--enable-optimizations参数，否则可能报错
+make clean  # 清空缓存
+make && make install  # 编译并安装（时间较久请耐心等待……）
+
+显示successful installed pip setuptools 表示成功
+
+rm -rf /usr/bin/python3
+ln -s /usr/local/python3/bin/python3 /usr/bin/python3
+rm -rf /usr/bin/pip3
+ln -s /usr/local/python3/bin/pip3 /usr/bin/pip3
