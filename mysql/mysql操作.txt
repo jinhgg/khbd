@@ -63,6 +63,9 @@ mysql -u root -p < /home/ljh/BackupName.sql
 设置远程访问
 vim /etc/mysql/mysql.conf.d/mysqld.cnf
 修改:bind-address = 0.0.0.0
+有些环境的root用户是不能远程访问的，需要创建一个用户
+create user 'username'@'%' identified by 'password';
+grant all privileges on *.* to 'username'@'%' with grant option;
 service mysql restart
 
 修改my.cnf后重启
