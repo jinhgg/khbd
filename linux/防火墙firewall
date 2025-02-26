@@ -1,0 +1,37 @@
+systemctl start/stop firewalld
+systemctl enable/disable firewalld # 开机启动
+添加端口
+firewall-cmd --zone=public --add-port=8000/tcp --permanent
+禁用端口
+firewall-cmd --zone=public --remove-port=8000/tcp --permanent
+reload生效
+firewall-cmd --reload
+查看开放的端口
+firewall-cmd --permanent --zone=public --list-ports
+
+--zone=public是默认的 不用加
+
+查看默认zone
+firewall-cmd --get-default-zone
+更改默认区域
+firewall-cmd --set-default-zone=home
+查看 public 区域的配置
+firewall-cmd --zone=public --list-all
+
+public: 适用于公共网络（如咖啡馆、机场等），默认只允许少量服务（如 SSH）。
+trusted: 允许所有流量通过，适用于完全信任的网络。
+home: 适用于家庭网络，允许更多服务（如 Samba、SSH 等）。
+internal: 类似于 home 区域，适用于内部网络。
+work: 适用于工作环境，允许更多服务（如 SSH、Samba-client 等）。
+dmz: 用于隔离区（DMZ）,仅允许特定服务。
+block：拒绝所有传入连接。
+drop：丢弃所有传入连接，不响应。
+
+查看zone的具体配置
+firewall-cmd --zone=public --list-all
+添加网络接口到public域
+firewall-cmd --zone=public --add-interface=tun0 --permanent
+firewall-cmd --reload
+移除网络接口
+firewall-cmd --zone=public --remove-interface=tun0 --permanent
+firewall-cmd --reload

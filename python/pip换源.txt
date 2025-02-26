@@ -4,3 +4,6 @@ vim pip.conf
 添加以下内容
 [global]
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+
+临时换源：
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple
