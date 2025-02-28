@@ -35,3 +35,10 @@ firewall-cmd --reload
 移除网络接口
 firewall-cmd --zone=public --remove-interface=tun0 --permanent
 firewall-cmd --reload
+
+将某个网段添加到信任域，使其可以访问所有端口
+firewall-cmd --zone=trusted --add-source=10.240.208.114 --permanent
+firewall-cmd --reload
+查看信任域有哪些网段
+firewall-cmd --zone=trusted --list-sources
+
